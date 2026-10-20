@@ -302,6 +302,7 @@ body {
   background: var(--primary-blue);
   color: #ffffff;
   border-color: var(--primary-blue);
+  box-shadow: 0 2px 8px rgba(29, 78, 216, 0.35);
 }
 
 .sim-btn.btn-danger.active {
@@ -309,6 +310,13 @@ body {
   border-color: var(--accent-red);
   color: #ffffff;
   box-shadow: 0 2px 8px rgba(220, 38, 38, 0.35);
+}
+
+.sim-btn.btn-orange.active {
+  background: #ea580c;
+  border-color: #c2410c;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.35);
 }
 
 .sim-btn.btn-warning.active {
@@ -319,9 +327,10 @@ body {
 }
 
 .sim-btn.btn-amber.active {
-  background: #ea580c;
-  border-color: #ea580c;
+  background: #f59e0b;
+  border-color: #d97706;
   color: #ffffff;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
 }
 
 /* =========================================================
@@ -1452,15 +1461,7 @@ body {
   border-radius: var(--radius-pill);
 }
 
-/* Buttons */
-.btn-orange {
-  background: #ea580c;
-  color: #ffffff;
-  border-color: #c2410c;
-}
-.btn-orange:hover {
-  background: #c2410c;
-}
+/* Orange Tag */
 
 .tag-orange {
   background: #ea580c;
