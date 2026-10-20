@@ -164,7 +164,7 @@
         <div class="card-header">
           <div>
             <h2 class="card-title">TDR Waveform & Ring-Oscillator Localization Engine</h2>
-            <p class="card-desc">Signal propagation speed in cable: $v \approx 0.20\text{ m/ns}$ ($2 \times 10^8\text{ m/s}$)</p>
+            <p class="card-desc">Signal propagation speed in cable: <em>v</em> ≈ 0.20 m/ns (2.0 × 10⁸ m/s)</p>
           </div>
           <div class="pill-badge pill-blue">High-Speed Signal Lab</div>
         </div>
@@ -175,7 +175,7 @@
             <div class="scope-legend">
               <span class="scope-legend-item"><span class="legend-line blue"></span> Dry Baseline</span>
               <span class="scope-legend-item"><span class="legend-line teal"></span> Live Trace</span>
-              <span class="scope-legend-item"><span class="legend-line red"></span> Differential ($\Delta\Gamma$)</span>
+              <span class="scope-legend-item"><span class="legend-line red"></span> Differential (ΔΓ)</span>
             </div>
           </div>
           <canvas id="tdrCanvas" width="680" height="230"></canvas>
@@ -189,15 +189,15 @@
             Instead of expensive lab time-to-digital converters, a simple <strong>74LVC14 Schmitt trigger inverter</strong> recirculates the reflected pulse into a closed loop. The cable forms a resonant delay-line oscillator whose frequency is counted directly by the <strong>ESP32 hardware pulse counter (PCNT)</strong>:
           </p>
           <div class="formula-banner">
-            <span class="formula">$$f = \frac{v}{4 \cdot d} \iff d = \frac{v}{4 \cdot f}$$</span>
+            <span class="formula"><em>f</em> = <em>v</em> / (4 · <em>d</em>) &nbsp;⟺&nbsp; <em>d</em> = <em>v</em> / (4 · <em>f</em>)</span>
           </div>
           <div class="innov-metrics-row">
             <div class="innov-metric">
-              <span class="label">Resonant Frequency ($f$)</span>
+              <span class="label">Resonant Frequency (<em>f</em>)</span>
               <strong id="ringFreqVal">20.83 MHz (Dry End)</strong>
             </div>
             <div class="innov-metric">
-              <span class="label">One-Way Time Delay ($\tau$)</span>
+              <span class="label">One-Way Time Delay (<em>τ</em>)</span>
               <strong id="ringTauVal">24.0 μs</strong>
             </div>
             <div class="innov-metric">
