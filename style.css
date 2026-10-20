@@ -2034,6 +2034,230 @@ body {
 }
 
 /* =========================================================
+   Cable Health Monitoring & Multi-Day Diagnostics
+   ========================================================= */
+.cable-health-card {
+  margin-top: 1.5rem;
+}
+
+.cable-health-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+@media (max-width: 950px) {
+  .cable-health-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.health-metrics-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.health-metric-tile {
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem 0.85rem;
+}
+
+.hm-label {
+  display: block;
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.25rem;
+}
+
+.health-metric-tile strong {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--text-main);
+  margin-bottom: 0.15rem;
+}
+
+.health-metric-tile small {
+  display: block;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.health-timeline-col {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+}
+
+.timeline-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.85rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.timeline-header-row h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.timeline-hint {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.health-timeline-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 0.25rem;
+}
+
+.day-step-btn {
+  background: #f8fafc;
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 0.6rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  flex: 0 0 auto;
+}
+
+.day-step-btn:hover {
+  background: var(--bg-hover);
+  border-color: #94a3b8;
+}
+
+.day-step-btn.active {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.25);
+}
+
+.day-step-btn.active.step-alert {
+  background: #dc2626;
+  border-color: #dc2626;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.35);
+}
+
+.day-num {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-main);
+}
+
+.day-step-btn.active .day-num {
+  color: #ffffff;
+}
+
+.day-label {
+  display: block;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+.day-step-btn.active .day-label {
+  color: #eff6ff;
+}
+
+.day-connector {
+  flex: 1 1 10px;
+  height: 2px;
+  background: #cbd5e1;
+}
+
+.health-diagnostic-box {
+  background: #f8fafc;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  transition: all 0.25s ease;
+}
+
+.diag-status-tag {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  margin-bottom: 0.35rem;
+}
+
+.diag-status-tag.tag-danger {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
+}
+
+.diag-status-tag.tag-warning {
+  background: #fffbeb;
+  color: #d97706;
+  border-color: #fde68a;
+}
+
+.health-diagnostic-box h4 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.3rem;
+}
+
+.health-diagnostic-box p {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.diag-actions-row {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.d-chip {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  background: #ffffff;
+  border: 1px solid var(--border-medium);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+}
+
+.chip-health .chip-dot {
+  background: var(--accent-green);
+}
+
+.chip-health.health-broken .chip-dot {
+  background: var(--accent-red);
+  box-shadow: 0 0 8px rgba(220, 38, 38, 0.6);
+  animation: pulseDot 1.2s infinite;
+}
+
+/* =========================================================
    Footer
    ========================================================= */
 .app-footer {

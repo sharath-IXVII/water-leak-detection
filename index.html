@@ -49,6 +49,11 @@
           <span class="chip-label">Active Cable:</span>
           <strong id="activeCableText">Flat Geotextile Ribbon (&lt; ₹6/m)</strong>
         </div>
+        <div class="status-chip chip-health" id="headerCableHealthChip">
+          <span class="chip-dot" id="headerCableHealthDot"></span>
+          <span class="chip-label">Cable Health:</span>
+          <strong id="headerCableHealthText">100% Intact (Auto-Check OK)</strong>
+        </div>
       </div>
 
       <div class="header-right">
@@ -81,7 +86,7 @@
         <button class="sim-btn btn-danger" id="simRuptureBtn">2. Pipe Burst at 6.80 km (Sector 2)</button>
         <button class="sim-btn btn-orange" id="simMediumBtn">3. Medium Joint Leak at 3.40 km (Sector 1)</button>
         <button class="sim-btn btn-warning" id="simRainBtn">4. Monsoon Rain Filter (Suppressed)</button>
-        <button class="sim-btn btn-amber" id="simCutBtn">5. Cable Cut / Tamper (8.20 km)</button>
+        <button class="sim-btn btn-amber" id="simCutBtn">5. Broken Cable Diagnostic (8.20 km High-Z)</button>
       </div>
     </section>
 
@@ -582,6 +587,97 @@
       </section>
 
     </div>
+
+    <!-- Cable Health Monitoring System (Continuous 3-5 Day Auto-Diagnostic Engine) -->
+    <section class="card cable-health-card" id="cableHealthCard">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">Cable Health Monitoring & Multi-Day Diagnostic Engine</h2>
+          <p class="card-desc">Continuous Schmitt Trigger Pulse Interrogation · Multi-Day Rolling Re-Check (3–5 Days) · High-Impedance & Physical Break Detection</p>
+        </div>
+        <div class="pill-badge pill-green" id="cableHealthBadge">Cable Status: 100% HEALTHY</div>
+      </div>
+
+      <div class="cable-health-grid">
+        <!-- Left: Diagnostic Real-Time Metrics -->
+        <div class="health-metrics-col">
+          <div class="health-metric-tile">
+            <span class="hm-label">Interrogation Engine</span>
+            <strong>74LVC14 Schmitt Trigger (3.3V Logic Pulse)</strong>
+            <small>Periodic low-duty-cycle test pulses every 30s</small>
+          </div>
+          <div class="health-metric-tile">
+            <span class="hm-label">Measured Cable Line Impedance</span>
+            <strong id="cableImpVal" style="color: #059669;">180 Ω (Nominal Balanced)</strong>
+            <small id="cableImpDesc">In-spec differential twin-lead impedance</small>
+          </div>
+          <div class="health-metric-tile">
+            <span class="hm-label">End-of-Line Reflection (Γ)</span>
+            <strong id="cableGammaVal">0.00 (Matched In-Line)</strong>
+            <small id="cableGammaDesc">Zero open-circuit discontinuity</small>
+          </div>
+          <div class="health-metric-tile">
+            <span class="hm-label">Continuous Rolling Window</span>
+            <strong id="recheckStatusVal">5/5 Days Nominal (Pass)</strong>
+            <small id="recheckStatusDesc">14,400 consecutive pulse sweeps verified</small>
+          </div>
+        </div>
+
+        <!-- Right: 3 to 5-Day Re-Check Verification Timeline -->
+        <div class="health-timeline-col">
+          <div class="timeline-header-row">
+            <h4>Continuous 3 to 5-Day Auto-Diagnostic Re-Check Logic</h4>
+            <span class="timeline-hint">Click any day to simulate the multi-day verification cycle:</span>
+          </div>
+
+          <div class="health-timeline-stepper">
+            <button class="day-step-btn active" data-day="0" id="dayStep0">
+              <span class="day-num">Normal</span>
+              <span class="day-label">100% Intact</span>
+            </button>
+            <div class="day-connector"></div>
+            <button class="day-step-btn" data-day="1" id="dayStep1">
+              <span class="day-num">Day 1</span>
+              <span class="day-label">High-Z Flag</span>
+            </button>
+            <div class="day-connector"></div>
+            <button class="day-step-btn" data-day="2" id="dayStep2">
+              <span class="day-num">Day 2</span>
+              <span class="day-label">Re-Pulse Sweep</span>
+            </button>
+            <div class="day-connector"></div>
+            <button class="day-step-btn" data-day="3" id="dayStep3">
+              <span class="day-num">Day 3</span>
+              <span class="day-label">Persistence &gt;72h</span>
+            </button>
+            <div class="day-connector"></div>
+            <button class="day-step-btn" data-day="4" id="dayStep4">
+              <span class="day-num">Day 4</span>
+              <span class="day-label">Hydraulic Check</span>
+            </button>
+            <div class="day-connector"></div>
+            <button class="day-step-btn" data-day="5" id="dayStep5">
+              <span class="day-num">Day 5</span>
+              <span class="day-label">Broken Alert</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Diagnostic Explanation Box -->
+          <div class="health-diagnostic-box" id="healthDiagBox">
+            <div class="diag-status-tag" id="diagStatusTag">CABLE INTEGRITY HEALTHY</div>
+            <h4 id="diagTitle">Baseline Reflection & Continuity 100% In-Spec</h4>
+            <p id="diagDesc">
+              The Schmitt trigger sends low-duty-cycle pulses continuously. All reflected waveforms align with the dry calibration baseline. No high-impedance discontinuities or line breaks are detected.
+            </p>
+            <div class="diag-actions-row" id="diagActionsRow">
+              <span class="d-chip">✓ Balanced Twin-Lead (180Ω)</span>
+              <span class="d-chip">✓ Zero Attenuation Spikes</span>
+              <span class="d-chip">✓ Self-Healing Anti-Electrolysis Polarity</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Interactive Scalability & BOM Calculator -->
     <section class="card bom-calculator-card">

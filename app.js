@@ -61,6 +61,29 @@ document.addEventListener('DOMContentLoaded', () => {
   const logTableBody = document.getElementById('logTableBody');
   const clearLogBtn = document.getElementById('clearLogBtn');
 
+  // Cable Health Monitoring Elements
+  const headerCableHealthChip = document.getElementById('headerCableHealthChip');
+  const headerCableHealthText = document.getElementById('headerCableHealthText');
+  const cableHealthBadge = document.getElementById('cableHealthBadge');
+  const cableImpVal = document.getElementById('cableImpVal');
+  const cableImpDesc = document.getElementById('cableImpDesc');
+  const cableGammaVal = document.getElementById('cableGammaVal');
+  const cableGammaDesc = document.getElementById('cableGammaDesc');
+  const recheckStatusVal = document.getElementById('recheckStatusVal');
+  const recheckStatusDesc = document.getElementById('recheckStatusDesc');
+  const diagStatusTag = document.getElementById('diagStatusTag');
+  const diagTitle = document.getElementById('diagTitle');
+  const diagDesc = document.getElementById('diagDesc');
+  const diagActionsRow = document.getElementById('diagActionsRow');
+  const dayStepBtns = [
+    document.getElementById('dayStep0'),
+    document.getElementById('dayStep1'),
+    document.getElementById('dayStep2'),
+    document.getElementById('dayStep3'),
+    document.getElementById('dayStep4'),
+    document.getElementById('dayStep5')
+  ];
+
   // Canvas context for light-theme oscilloscope
   const canvas = document.getElementById('tdrCanvas');
   const ctx = canvas.getContext('2d');
@@ -270,6 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
     currentMode = 'NORMAL';
     setActiveSimBtn(simNormalBtn);
     resetDecisionBoxes();
+    if (typeof setCableHealthDay === 'function') setCableHealthDay(0);
 
     mainSystemBadge.textContent = 'ALL SYSTEMS NORMAL';
     mainSystemBadge.className = 'system-badge badge-normal';
@@ -309,6 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setActiveSimBtn(simRuptureBtn);
     resetDecisionBoxes();
     decBoxBurst.classList.add('highlight-burst');
+    if (typeof setCableHealthDay === 'function') setCableHealthDay(0);
 
     // Activate LoRa Multi-Hop Relay animation: Node 2 -> Node 1 -> Gateway
     waveHop2.classList.add('active');
@@ -371,6 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setActiveSimBtn(simMediumBtn);
     resetDecisionBoxes();
     decBoxMedium.classList.add('highlight-medium');
+    if (typeof setCableHealthDay === 'function') setCableHealthDay(0);
 
     // Hop 1 active (Node 1 -> Gateway)
     waveHop1.classList.add('active');
@@ -432,6 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setActiveSimBtn(simRainBtn);
     resetDecisionBoxes();
     decBoxRain.classList.add('highlight-rain');
+    if (typeof setCableHealthDay === 'function') setCableHealthDay(0);
 
     mainSystemBadge.textContent = 'RAIN DETECTED: FALSE ALARM FILTERED';
     mainSystemBadge.className = 'system-badge badge-warning';
@@ -484,48 +511,61 @@ document.addEventListener('DOMContentLoaded', () => {
     resetDecisionBoxes();
     decBoxCut.classList.add('highlight-medium');
 
-    mainSystemBadge.textContent = 'FAULT: SENSING LINE SEVERED AT 8.20 KM';
+    if (typeof setCableHealthDay === 'function') setCableHealthDay(5);
+
+    mainSystemBadge.textContent = 'FAULT: SENSING LINE BROKEN AT 8.20 KM (DAY 4/5 CONFIRMED)';
     mainSystemBadge.className = 'system-badge badge-warning';
 
     pipePressureVal.textContent = '4.20 Bar (Pipe OK)';
     pipePressureVal.style.color = 'var(--text-main)';
     flowVelocityVal.textContent = '1.45 m/s';
     estimatedLossVal.textContent = '0 L/hr';
-    activeSectorVal.textContent = 'SECTOR 2 (Line Break)';
+    activeSectorVal.textContent = 'SECTOR 2 (Broken Cable)';
 
     pinpointMarker.style.display = 'block';
     pinpointMarker.style.left = '82%';
     pinpointDot.style.background = '#f59e0b';
     pinpointRipple.style.borderColor = '#f59e0b';
 
-    calloutTitle.textContent = 'CABLE CUT / TAMPER LOCATED';
+    calloutTitle.textContent = 'BROKEN CABLE CONFIRMED (SEVERED AT 8.20 KM)';
     calloutTitle.style.color = '#d97706';
     calloutDist.textContent = '8,200 m (km 8.20)';
     calloutRef.textContent = 'Sector 2 (Node 2 Right Port)';
     calloutNodeOffset.textContent = '700 m East of Node 2 (km 7.5)';
     calloutFreq.textContent = 'Open Circuit (Γ = +1.0)';
-    calloutConf.textContent = '99.5%';
+    calloutConf.textContent = '99.8% (4-Day Re-Check)';
     calloutConf.style.color = '#059669';
     calloutRelay.textContent = 'Node 2 → Node 1 → Gateway';
 
     ringFreqVal.textContent = '73.93 kHz (Open Edge)';
     ringTauVal.textContent = '3.38 μs';
-    calcDistanceVal.textContent = '8,200 m (Cable Cut)';
+    calcDistanceVal.textContent = '8,200 m (Broken Cable)';
 
     telemetryJsonBox.textContent = JSON.stringify({
       network: "JAL_JEEVAN_LORA_865",
       alarm_severity: "CABLE_SEVERED_FAULT",
       detecting_node: "FIELD_NODE_2 (km 7.5)",
       sensing_channel: "PORT_B_RIGHT_EAST",
-      reflection_type: "POSITIVE_EDGE_OPEN_CIRCUIT",
+      reflection_type: "POSITIVE_EDGE_OPEN_CIRCUIT (Γ = +1.0)",
       local_offset_m: 700.0,
       global_cut_location_m: 8200.0,
       pipe_pressure_bar: 4.20,
+      cable_health_diagnostic: {
+        status: "CABLE_BROKEN_SEVERED",
+        interrogation_pulse: "SCHMITT_TRIGGER_74LVC14 (3.3V)",
+        impedance_measured: "HIGH_IMPEDANCE_OPEN_CIRCUIT (> 10MΩ)",
+        recheck_persistence_window: "4_TO_5_DAYS_CONTINUOUS",
+        consecutive_sweeps_failed: 11520,
+        hydraulic_pressure_fusion: "NORMAL_4.20BAR (NO_LEAK)",
+        verdict: "PHYSICAL_CABLE_BREAK_CONFIRMED",
+        dispatch_action: "CABLE_SPLICING_TECHNICIAN_DISPATCHED"
+      },
+      relay_hops: ["NODE_2 (km 7.5)", "NODE_1 (km 2.5)", "GATEWAY_0 (km 0.0)"],
       action: "CABLE_REPAIR_CREW_NOTIFIED",
       timestamp: new Date().toISOString()
     }, null, 2);
 
-    addLogRow('CUT', 'SECTOR 2 (N2)', 'Cable Cut / Tamper', '8.20 km (Pit 2 + 700m)', '99.5%', 'Open circuit positive reflection detected. Dispatched technician to splice wire.');
+    addLogRow('CUT', 'SECTOR 2 (N2)', 'Broken Cable Confirmed', '8.20 km (Pit 2 + 700m)', '99.8%', 'Schmitt pulse persistent High-Z after 4-day re-check. Broken line confirmed & repair dispatched.');
   }
 
   // Dual-Cable Toggle Functions
@@ -1122,6 +1162,185 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.target === shareModal) shareModal.style.display = 'none';
   });
 
+  // =========================================================
+  // Cable Health Monitoring & Multi-Day Diagnostic Logic
+  // =========================================================
+  const cableHealthDaysData = {
+    0: {
+      badge: 'Cable Status: 100% HEALTHY',
+      badgeClass: 'pill-badge pill-green',
+      headerText: '100% Intact (Auto-Check OK)',
+      headerBroken: false,
+      impVal: '180 Ω (Nominal Balanced)',
+      impColor: '#059669',
+      impDesc: 'In-spec differential twin-lead impedance',
+      gammaVal: '0.00 (Matched In-Line)',
+      gammaDesc: 'Zero open-circuit discontinuity',
+      recheckVal: '5/5 Days Nominal (Pass)',
+      recheckDesc: '14,400 consecutive pulse sweeps verified',
+      tagText: 'CABLE INTEGRITY HEALTHY',
+      tagClass: 'diag-status-tag',
+      title: 'Baseline Reflection & Continuity 100% In-Spec',
+      desc: 'The Schmitt trigger sends low-duty-cycle pulses continuously. All reflected waveforms align with the dry calibration baseline. No high-impedance discontinuities or line breaks are detected.',
+      chips: ['✓ Balanced Twin-Lead (180Ω)', '✓ Zero Attenuation Spikes', '✓ Self-Healing Anti-Electrolysis Polarity']
+    },
+    1: {
+      badge: 'Cable Status: RE-CHECKING (DAY 1)',
+      badgeClass: 'pill-badge pill-blue',
+      headerText: 'Re-Checking Line (Day 1)',
+      headerBroken: false,
+      impVal: '> 10 MΩ (High-Z Anomaly)',
+      impColor: '#d97706',
+      impDesc: 'Discontinuity detected at 8,200 m mark',
+      gammaVal: '+0.88 (Initial Positive Edge)',
+      gammaDesc: 'Potential open loop or loose splice',
+      recheckVal: 'Day 1/5: Auto-Recheck Armed',
+      recheckDesc: 'Avoiding premature false alarm',
+      tagText: 'DAY 1: HIGH-IMPEDANCE DISCONTINUITY DETECTED',
+      tagClass: 'diag-status-tag tag-warning',
+      title: 'Initial High-Z Detected — Diagnostic Re-Check Armed',
+      desc: 'A routine 3.3V Schmitt trigger pulse detected an unexpected open-circuit reflection edge (> 10MΩ). To prevent premature false alarms from transient disturbances, the node initiates an automated 3–5 day persistence re-check sequence.',
+      chips: ['⚠️ High-Z Event Flagged', '⏱️ 3–5 Day Rolling Timer Armed', '🔄 Polarity Re-Pulse Scheduled']
+    },
+    2: {
+      badge: 'Cable Status: RE-CHECKING (DAY 2)',
+      badgeClass: 'pill-badge pill-blue',
+      headerText: 'Re-Checking Line (Day 2)',
+      headerBroken: false,
+      impVal: '> 10 MΩ (High-Z Persistent)',
+      impColor: '#d97706',
+      impDesc: 'Inverted polarity sweep failed continuity',
+      gammaVal: '+0.94 (Positive Edge)',
+      gammaDesc: 'Inaccurate reflection readings',
+      recheckVal: 'Day 2/5: Sweep In Progress',
+      recheckDesc: '2,880 verification pulses sent',
+      tagText: 'DAY 2: AUTOMATED RE-PULSE & POLARITY SWEEP',
+      tagClass: 'diag-status-tag tag-warning',
+      title: 'Anti-Electrolysis Polarity Re-Verification',
+      desc: 'Automated re-pulsing with alternating voltage sweeps sent every 30 seconds to clear potential soil polarization or galvanic film. Inaccurate values and high-impedance condition persist. Cable line continuity remains questionable.',
+      chips: ['⚠️ 2,880 Test Pulses Sent', '⚡ Polarity Inversion Applied', '📊 Drift Analysis In Progress']
+    },
+    3: {
+      badge: 'Cable Status: ANOMALY PERSISTING (DAY 3)',
+      badgeClass: 'pill-badge pill-blue',
+      headerText: 'High-Z Persisting (Day 3)',
+      headerBroken: false,
+      impVal: '> 10 MΩ (High-Z Persistent)',
+      impColor: '#d97706',
+      impDesc: 'Failed to return nominal values over 72h',
+      gammaVal: '+0.98 (Open Edge)',
+      gammaDesc: 'Severe impedance discontinuity',
+      recheckVal: 'Day 3/5: > 72h Continuous',
+      recheckDesc: '8,640 consecutive failed sweeps',
+      tagText: 'DAY 3: PERSISTENT ABNORMAL IMPEDANCE (> 72 HOURS)',
+      tagClass: 'diag-status-tag tag-warning',
+      title: 'Continuous Multi-Day Persistence Confirmed',
+      desc: 'The cable has now failed to return nominal baseline values for over 72 hours continuously. Transient soil drying, rainwater evaporation, and temperature swings are ruled out as causal factors.',
+      chips: ['⚠️ > 8,640 Sweeps Failed', '📉 Erratic Reflection Profile', '🛡️ Transient Disturbance Ruled Out']
+    },
+    4: {
+      badge: 'Cable Status: HYDRAULIC CROSS-CHECK (DAY 4)',
+      badgeClass: 'pill-badge pill-blue',
+      headerText: 'Hydraulic Cross-Check (Day 4)',
+      headerBroken: false,
+      impVal: '> 10 MΩ (Open Circuit)',
+      impColor: '#ea580c',
+      impDesc: 'Physical line break verified',
+      gammaVal: '+1.00 (Pure Open Edge)',
+      gammaDesc: 'Full reflection back to node',
+      recheckVal: 'Day 4/5: Sensor Fusion OK',
+      recheckDesc: 'Line pressure normal (4.20 Bar)',
+      tagText: 'DAY 4: HYDRAULIC PRESSURE CROSS-CHECK',
+      tagClass: 'diag-status-tag tag-warning',
+      title: 'Multi-Sensor Fusion Validates Line Integrity Fault',
+      desc: 'Cross-checking with pipeline pressure transducers confirms trunk line pressure is completely stable at 4.20 Bar. Because there is no hydraulic burst or pressure drop, the fault is isolated to a physical cable break (e.g., third-party excavation or soil shear).',
+      chips: ['✅ Pipeline Pressure Normal (4.20 Bar)', '❌ Line Electrical Open (Γ = +1.0)', '⚡ Fault Isolated to Sensing Wire']
+    },
+    5: {
+      badge: 'Cable Status: BROKEN AT 8.20 KM (CONFIRMED)',
+      badgeClass: 'pill-badge pill-red',
+      headerText: 'BROKEN AT 8.20 KM (Day 4/5 Verified)',
+      headerBroken: true,
+      impVal: '> 10 MΩ (Physical Break)',
+      impColor: '#dc2626',
+      impDesc: 'Severed line at 8,200 m (Pit 2 + 700m)',
+      gammaVal: '+1.00 (Total Reflection)',
+      gammaDesc: 'Infinite impedance open terminal',
+      recheckVal: 'Day 5/5: FAULT CONFIRMED',
+      recheckDesc: 'Continuous High-Z across 14,400 sweeps',
+      tagText: 'DAY 5: FAULT CONFIRMED — CABLE BROKEN / SEVERED',
+      tagClass: 'diag-status-tag tag-danger',
+      title: 'Broken Cable Confirmed — LoRa Alert Dispatched to Dashboard',
+      desc: 'High-impedance condition persisted continuously across the entire 4–5 day diagnostic window. The cable is officially diagnosed as physically BROKEN / SEVERED at 8.20 km (Sector 2, Pit 2 + 700m). Splicing technician dispatched via automated ticket!',
+      chips: ['🚨 BROKEN CABLE CONFIRMED', '📍 Exact Break Point: 8,200 m (Pit 2 + 700m)', '📱 LoRa Telemetry Dispatched to Crew']
+    }
+  };
+
+  function setCableHealthDay(dayNum) {
+    const data = cableHealthDaysData[dayNum] || cableHealthDaysData[0];
+
+    if (cableHealthBadge) {
+      cableHealthBadge.textContent = data.badge;
+      cableHealthBadge.className = data.badgeClass;
+    }
+
+    if (headerCableHealthText) {
+      headerCableHealthText.textContent = data.headerText;
+    }
+    if (headerCableHealthChip) {
+      headerCableHealthChip.classList.toggle('health-broken', data.headerBroken);
+    }
+
+    if (cableImpVal) {
+      cableImpVal.textContent = data.impVal;
+      cableImpVal.style.color = data.impColor;
+    }
+    if (cableImpDesc) cableImpDesc.textContent = data.impDesc;
+
+    if (cableGammaVal) cableGammaVal.textContent = data.gammaVal;
+    if (cableGammaDesc) cableGammaDesc.textContent = data.gammaDesc;
+
+    if (recheckStatusVal) recheckStatusVal.textContent = data.recheckVal;
+    if (recheckStatusDesc) recheckStatusDesc.textContent = data.recheckDesc;
+
+    if (diagStatusTag) {
+      diagStatusTag.textContent = data.tagText;
+      diagStatusTag.className = data.tagClass;
+    }
+
+    if (diagTitle) diagTitle.textContent = data.title;
+    if (diagDesc) diagDesc.textContent = data.desc;
+
+    if (diagActionsRow) {
+      diagActionsRow.innerHTML = data.chips.map(c => `<span class="d-chip">${c}</span>`).join('');
+    }
+
+    dayStepBtns.forEach((btn, idx) => {
+      if (btn) {
+        btn.classList.toggle('active', idx === dayNum);
+        if (idx === 5 && dayNum === 5) {
+          btn.classList.add('step-alert');
+        } else {
+          btn.classList.remove('step-alert');
+        }
+      }
+    });
+  }
+
+  dayStepBtns.forEach((btn, idx) => {
+    if (btn) {
+      btn.addEventListener('click', () => {
+        if (idx === 0) {
+          setNormalMode();
+        } else if (idx === 5) {
+          setCutMode();
+        } else {
+          setCableHealthDay(idx);
+        }
+      });
+    }
+  });
+
   // Initialize
   setNormalMode();
   updateCableComparator('RIBBON');
@@ -1129,5 +1348,6 @@ document.addEventListener('DOMContentLoaded', () => {
   selectFlowBlock('4');
   selectWalkthroughStep('1');
   updateBomCalculator(10);
+  setCableHealthDay(0);
 });
 

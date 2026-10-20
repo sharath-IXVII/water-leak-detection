@@ -44,6 +44,11 @@ Jal Jeevan introduces four practical engineering innovations:
 * **Power-Over-Trench with Micro-UPS:** Each node is powered via a continuous 24V DC SELV auxiliary wire laid in the pipe trench from the Gateway's central solar station, backed by an internal 3.65V LiFePO4 micro-UPS buffer (30-day backup), completely eliminating dead-battery risks underground.
 * **Above-Ground Gateway:** The central LoRa receiver gateway (at the headworks pump station or village water tank) is powered by solar / 230V mains.
 
+### 5. Automated Cable Health Monitoring (3–5 Day Continuous Diagnostic)
+* **High-Impedance Pulse Interrogation:** The 74LVC14 Schmitt trigger interrogates the line with low-duty-cycle continuity pulses.
+* **Continuous Multi-Day Persistence Check:** If an open circuit / abnormal high impedance ($Z > 10\text{ M}\Omega$, $\Gamma = +1.0$) is detected, the firmware initiates an automated 3 to 5-day continuous re-check sequence to avoid false alarms from transient disturbances.
+* **Broken Cable Confirmation:** If values remain inaccurate/open across 10,000+ pulses and pipeline pressure is stable (confirming no hydraulic cavitation), the system formally diagnoses the line as **BROKEN / SEVERED**, pinpoints the exact meter mark, and transmits the diagnostic alert over LoRa to the dashboard.
+
 ---
 
 ## 📡 LoRa 865 MHz Telemetry (10 km Sector Range)
