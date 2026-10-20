@@ -41,10 +41,10 @@ Jal Jeevan introduces four practical engineering innovations:
   * **Cable Wet + Internal Pressure Drop** $\implies$ **CONFIRMED PIPE BURST** (Red Dot triggered, emergency dispatch sent).
   * **Cable Wet + Internal Pressure Normal** $\implies$ **RAIN / GROUNDWATER INFILTRATION** (False alarm automatically suppressed!).
 
-### 4. Dual-Mode Sleep-Wake Power (2.8 Years Battery Life)
-* **99.9% of the time:** ESP32 remains in ultra-low-power Deep Sleep ($< 10\ \mu\text{A}$).
-* Once every 10 seconds, it wakes for 1 millisecond to run a **polarity-reversing microsecond pulse check** (eliminating galvanic copper electrolysis).
-* Active TDR and LoRa transmission trigger **only upon event detection**, powered by a single 18650 cell + solar panel.
+### 4. Underground Battery Architecture & Deep Sleep (3.5+ Years Autonomy)
+* **Underground Node (Zero Solar Dependency):** Because pipeline monitoring nodes reside underground along the pipe trench or in sub-surface pits, solar cannot be used. The node is powered by a long-life 3.6V LiSOCl₂ (Lithium Thionyl Chloride) high-energy cell.
+* **99.9% Deep Sleep:** ESP32 stays in ultra-low-power Deep Sleep ($< 10\ \mu\text{A}$), waking for just 1.2 ms every 10 seconds for a pulsed polarity check (eliminating electrolysis). Active TDR and LoRa fire only upon event detection, yielding **3.5+ years of autonomous life**.
+* **Above-Ground Gateway:** The central LoRa receiver gateway (located at the headworks, pump station, or overhead water tank) is powered by solar / 230V mains.
 
 ---
 

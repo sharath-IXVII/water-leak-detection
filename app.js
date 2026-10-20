@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
       pressure_bar: 4.20,
       cable_impedance_ohm: 100000,
       rain_filter_active: true,
-      battery_v: 3.92,
+      battery_v: 3.65,
       timestamp: new Date().toISOString()
     }, null, 2);
 
