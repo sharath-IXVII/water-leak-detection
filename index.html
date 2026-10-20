@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HydroPulse - Smart Water Pipeline Leak Detection & Localization (SIH)</title>
+  <meta name="description" content="Indigenous Low-Cost TDR Sensing Cable + ESP32 LoRa Pipeline Leak Detection & Localization System for Smart India Hackathon.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-light">
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="header-left">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <div class="title-row">
+            <h1>HydroPulse</h1>
+            <span class="badge-sih">SIH 2024–2025</span>
+            <span class="badge-jjm">Jal Jeevan Mission</span>
+          </div>
+          <p class="subtitle">Indigenous TDR Cable + ESP32 LoRa Pipeline Leak Localization System</p>
+        </div>
+      </div>
+
+      <div class="header-center">
+        <div class="status-chip chip-online">
+          <span class="chip-dot"></span>
+          <span class="chip-label">LoRa 865 MHz:</span>
+          <strong id="loraStatusText">Gateway Active (10 km Sector)</strong>
+        </div>
+        <div class="status-chip chip-battery">
+          <span class="chip-icon">☀️</span>
+          <span class="chip-label">Node Power:</span>
+          <strong id="powerStatusText">3.92 V (Solar Charging)</strong>
+        </div>
+        <div class="status-chip">
+          <span class="chip-label">Monitored Line:</span>
+          <strong>Sector B-4 (10 km Trunk)</strong>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="btn btn-secondary" id="shareModalBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+          Share Live Link
+        </button>
+        <button class="btn btn-primary" id="triggerBurstBtn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+          Simulate Pipe Burst
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- Interactive Simulation Control Bar -->
+    <section class="control-panel-bar">
+      <div class="control-title">
+        <span class="control-icon">🎮</span>
+        <div>
+          <strong>Live Scenario Simulator for Mentors & SIH Jury</strong>
+          <span>Test real-world edge cases to verify false-alarm immunity and pinpoint localization</span>
+        </div>
+      </div>
+      <div class="simulation-actions">
+        <button class="sim-btn active" id="simNormalBtn">1. Normal (Deep Sleep)</button>
+        <button class="sim-btn btn-danger" id="simRuptureBtn">2. Real Pipe Burst (4.8 km)</button>
+        <button class="sim-btn btn-warning" id="simRainBtn">3. Rain / Groundwater Filter</button>
+        <button class="sim-btn btn-amber" id="simCutBtn">4. Cable Cut Fault (7.2 km)</button>
+      </div>
+    </section>
+
+    <!-- Pipeline Visualizer -->
+    <section class="card pipeline-card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">Real-Time Pipeline Spatial Monitor (10 km Sector B-4)</h2>
+          <p class="card-desc">Underground HDPE Pipeline (Ø 200 mm) with Indigenous TDR Sensing Cable strapped underneath</p>
+        </div>
+        <div class="status-badge-container">
+          <span class="system-badge badge-normal" id="mainSystemBadge">ALL SYSTEMS NORMAL</span>
+        </div>
+      </div>
+
+      <div class="pipeline-viewport">
+        <!-- Ruler bar -->
+        <div class="distance-ruler">
+          <div class="ruler-tick"><span>0 km</span><small>Node A</small></div>
+          <div class="ruler-tick"><span>2 km</span><small>Pit 1</small></div>
+          <div class="ruler-tick"><span>4 km</span><small>Pit 2</small></div>
+          <div class="ruler-tick"><span>6 km</span><small>Pit 3</small></div>
+          <div class="ruler-tick"><span>8 km</span><small>Pit 4</small></div>
+          <div class="ruler-tick"><span>10 km</span><small>Node B (Gateway)</small></div>
+        </div>
+
+        <!-- Pipeline Schematic Track -->
+        <div class="pipe-track">
+          <!-- Main water pipe -->
+          <div class="pipe-structure">
+            <div class="water-core" id="waterCore"></div>
+          </div>
+          <!-- Sensing cable running along bottom -->
+          <div class="sensing-cable-line">
+            <span class="cable-tag">Indigenous Dielectric Sensing Cable (Strapped to pipe invert)</span>
+          </div>
+
+          <!-- Valve Chambers along the 10km line -->
+          <div class="pit-marker" style="left: 0%;" title="Headworks Node A (0 km)"></div>
+          <div class="pit-marker" style="left: 20%;" title="Valve Pit 1 (2.0 km)"></div>
+          <div class="pit-marker" style="left: 40%;" title="Valve Pit 2 (4.0 km)"></div>
+          <div class="pit-marker" style="left: 60%;" title="Valve Pit 3 (6.0 km)"></div>
+          <div class="pit-marker" style="left: 80%;" title="Valve Pit 4 (8.0 km)"></div>
+          <div class="pit-marker" style="left: 100%;" title="Tail Node B (10.0 km)"></div>
+
+          <!-- Pinpoint Marker (Red Dot for burst, Amber for warning, Orange for cable cut) -->
+          <div class="pinpoint-marker" id="pinpointMarker" style="display: none; left: 48%;">
+            <div class="pinpoint-ripple"></div>
+            <div class="pinpoint-dot" id="pinpointDot"></div>
+            <div class="pinpoint-callout" id="pinpointCallout">
+              <strong id="calloutTitle">PIPE BURST PINPOINTED</strong>
+              <div class="callout-grid">
+                <div><span>Exact Distance:</span> <strong id="calloutDist">4,800 m (4.80 km)</strong></div>
+                <div><span>Chamber Ref:</span> <span id="calloutRef">Pit 2 + 800 m</span></div>
+                <div><span>Round-Trip Time:</span> <span id="calloutTime">48.0 μs</span></div>
+                <div><span>System Confidence:</span> <strong id="calloutConf" style="color: #059669;">98.6%</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legend and summary bar -->
+        <div class="pipeline-meta-footer">
+          <div class="legend-group">
+            <div class="legend-item"><span class="legend-swatch pipe-swatch"></span> HDPE Pipeline</div>
+            <div class="legend-item"><span class="legend-swatch cable-swatch"></span> Sensing Cable</div>
+            <div class="legend-item"><span class="legend-swatch pit-swatch"></span> Valve Inspection Pit</div>
+            <div class="legend-item"><span class="legend-swatch burst-swatch"></span> Confirmed Leak (Red Dot)</div>
+            <div class="legend-item"><span class="legend-swatch rain-swatch"></span> Rain Filtered (No Alarm)</div>
+          </div>
+          <div class="pipe-health-metric">
+            <span>Pipeline Pressure: <strong id="pipePressureVal">4.20 Bar</strong></span>
+            <span class="metric-divider">|</span>
+            <span>Flow Velocity: <strong id="flowVelocityVal">1.45 m/s</strong></span>
+            <span class="metric-divider">|</span>
+            <span>Estimated Loss: <strong id="estimatedLossVal">0 L/hr</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two-Column Technical Showcase Grid -->
+    <div class="two-col-grid">
+
+      <!-- Left Column: TDR Waveform & ₹50 Ring-Oscillator Calculator -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">TDR Waveform & Ring-Oscillator Localization Engine</h2>
+            <p class="card-desc">Signal propagation speed in cable: $v \approx 0.20\text{ m/ns}$ ($2 \times 10^8\text{ m/s}$)</p>
+          </div>
+          <div class="pill-badge pill-blue">High-Speed Signal Lab</div>
+        </div>
+
+        <div class="scope-wrapper">
+          <div class="scope-header">
+            <span class="scope-title">Oscilloscope Trace (Incident vs Reflected Pulse)</span>
+            <div class="scope-legend">
+              <span class="scope-legend-item"><span class="legend-line blue"></span> Dry Baseline</span>
+              <span class="scope-legend-item"><span class="legend-line teal"></span> Live Trace</span>
+              <span class="scope-legend-item"><span class="legend-line red"></span> Differential ($\Delta\Gamma$)</span>
+            </div>
+          </div>
+          <canvas id="tdrCanvas" width="680" height="230"></canvas>
+        </div>
+
+        <!-- Breakthrough Innovation: Ring-Oscillator Calculation Box -->
+        <div class="innovation-feature-box">
+          <div class="innov-badge">💡 100% BUILDABLE INNOVATION</div>
+          <h4 class="innov-title">The ₹50 Closed-Loop Ring-Oscillator TDR (Replaces ₹30,000 Timing Chips)</h4>
+          <p class="innov-desc">
+            Instead of expensive lab time-to-digital converters, a simple <strong>74LVC14 Schmitt trigger inverter</strong> recirculates the reflected pulse into a closed loop. The cable forms a resonant delay-line oscillator whose frequency is counted directly by the <strong>ESP32 hardware pulse counter (PCNT)</strong>:
+          </p>
+          <div class="formula-banner">
+            <span class="formula">$$f = \frac{v}{4 \cdot d} \iff d = \frac{v}{4 \cdot f}$$</span>
+          </div>
+          <div class="innov-metrics-row">
+            <div class="innov-metric">
+              <span class="label">Resonant Frequency ($f$)</span>
+              <strong id="ringFreqVal">20.83 MHz (Dry End)</strong>
+            </div>
+            <div class="innov-metric">
+              <span class="label">One-Way Time Delay ($\tau$)</span>
+              <strong id="ringTauVal">24.0 μs</strong>
+            </div>
+            <div class="innov-metric">
+              <span class="label">ESP32 Pinpoint Distance</span>
+              <strong id="calcDistanceVal" class="text-accent">-- m</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: LoRa 865 MHz Telemetry & False Alarm Immunity Logic -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">LoRa 865 MHz Telemetry & Multi-Sensor Fusion</h2>
+            <p class="card-desc">10 km Long-Range Wireless Transmission (SX1276 Node → ESP32 Gateway)</p>
+          </div>
+          <div class="pill-badge pill-green" id="loraRfBadge">RSSI: -84 dBm | SNR: +9.2 dB</div>
+        </div>
+
+        <!-- Terminal JSON Output -->
+        <div class="telemetry-console">
+          <div class="console-top-bar">
+            <div class="mac-dots">
+              <span class="mac-dot red"></span>
+              <span class="mac-dot yellow"></span>
+              <span class="mac-dot green"></span>
+            </div>
+            <span class="console-title">ESP32_LORA_PAYLOAD (12-Byte Packed Binary & Decoded JSON)</span>
+          </div>
+          <pre class="console-code" id="telemetryJsonBox">{
+  "node_id": "SEC-B_KM10_NODE1",
+  "status": "NORMAL_STANDBY",
+  "power_mode": "DEEP_SLEEP_10UA",
+  "distance_m": 0.0,
+  "pressure_bar": 4.20,
+  "cable_impedance_ohm": 100000,
+  "rain_filter_active": true,
+  "battery_v": 3.92,
+  "timestamp": "2026-10-20T08:55:00Z"
+}</pre>
+        </div>
+
+        <!-- Innovation: Rain vs Rupture Filter -->
+        <div class="fusion-card">
+          <h4 class="fusion-title">🛡️ False-Alarm Immunity (Rain Infiltration vs Pipe Burst Filter)</h4>
+          <p class="fusion-desc">
+            The #1 question asked by SIH judges: <em>"What if monsoon rain wets the soil?"</em>
+            HydroPulse cross-correlates external cable moisture with internal hydraulic pressure:
+          </p>
+          <div class="fusion-decision-grid">
+            <div class="decision-box" id="decBoxBurst">
+              <span class="dec-tag tag-danger">CABLE WET + PRESSURE DROP</span>
+              <strong>CONFIRMED PIPE BURST</strong>
+              <small>Dispatches emergency repair team to exact meter mark</small>
+            </div>
+            <div class="decision-box" id="decBoxRain">
+              <span class="dec-tag tag-warning">CABLE WET + NORMAL PRESSURE</span>
+              <strong>RAIN INFILTRATION</strong>
+              <small>Groundwater saturation detected; false alarm suppressed!</small>
+            </div>
+            <div class="decision-box" id="decBoxCut">
+              <span class="dec-tag tag-amber">END-OF-LINE OPEN CIRCUIT</span>
+              <strong>CABLE TAMPER / CUT</strong>
+              <small>Physical line severed; pinpointed using reflection</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Node Health Specs -->
+        <div class="specs-grid">
+          <div class="spec-tile">
+            <span class="spec-label">Battery Autonomy</span>
+            <strong>2.8 Years (Solar Assisted)</strong>
+          </div>
+          <div class="spec-tile">
+            <span class="spec-label">Anti-Electrolysis Check</span>
+            <strong style="color: #059669;">Pulsed Polarity Active</strong>
+          </div>
+          <div class="spec-tile">
+            <span class="spec-label">LoRa Frequency</span>
+            <strong>865.2 MHz (India Band)</strong>
+          </div>
+          <div class="spec-tile">
+            <span class="spec-label">Cable Cost per Meter</span>
+            <strong style="color: #2563eb;">₹28 / meter</strong>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Alert History & Automated Dispatch Table -->
+    <section class="card log-card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">Real-Time Event Log & Jal Jeevan Mission Maintenance Dispatch</h2>
+          <p class="card-desc">Every event is cryptographically verified, timestamped, and dispatched via SMS/MQTT to field technicians</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="clearLogBtn">Clear Log Table</button>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Sector & Node</th>
+              <th>Alarm Condition</th>
+              <th>Estimated Distance</th>
+              <th>Sensor Evidence</th>
+              <th>System Action & Dispatch</th>
+            </tr>
+          </thead>
+          <tbody id="logTableBody">
+            <tr>
+              <td>08:52:10</td>
+              <td>SEC-B_KM10</td>
+              <td><span class="badge-status badge-ok">Heartbeat Normal</span></td>
+              <td>--</td>
+              <td>Pressure 4.20 Bar, Cable Dry (100kΩ)</td>
+              <td>Node healthy, 10 km LoRa link verified</td>
+            </tr>
+            <tr>
+              <td>08:45:00</td>
+              <td>SEC-B_KM10</td>
+              <td><span class="badge-status badge-ok">Baseline Sync</span></td>
+              <td>--</td>
+              <td>Reference trace stored for 10 km sector</td>
+              <td>Zero-drift auto calibration completed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Project Presentation & SIH Defense Summary -->
+    <section class="card mentor-card">
+      <div class="mentor-header">
+        <div class="mentor-badge">🏆 SIH JURY DEFENSE & MENTOR REVIEW SHEET</div>
+        <h3>Why HydroPulse Wins the Smart India Hackathon</h3>
+      </div>
+      <div class="mentor-grid">
+        <div class="mentor-col">
+          <h4>1. 100% Pipe Material Agnostic</h4>
+          <p>Acoustic leak loggers fail on HDPE/PVC plastic pipes because plastic dampens sound waves. HydroPulse senses external water contact directly, working on <strong>100% of pipeline materials</strong>.</p>
+        </div>
+        <div class="mentor-col">
+          <h4>2. Meter Pinpoint vs Zone Guess</h4>
+          <p>Flow meters only tell you a 10 km zone is losing water. HydroPulse pinpoints the leak down to the <strong>exact meter mark</strong>, saving digging miles of rural roads.</p>
+        </div>
+        <div class="mentor-col">
+          <h4>3. 95% Cost Reduction</h4>
+          <p>Commercial TDR cables (TraceTek/TTK) are imported and cost ₹5,000–₹10,000/meter. HydroPulse uses an indigenous composite cable manufactured locally for <strong>under ₹30/meter</strong>.</p>
+        </div>
+        <div class="mentor-col">
+          <h4>4. ₹50 Ring-Oscillator Timing</h4>
+          <p>Eliminates the need for expensive picosecond time-to-digital converter chips by turning the cable into a resonant frequency oscillator measured by the <strong>ESP32 pulse counter</strong>.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Share Public Link Modal -->
+  <div class="modal-backdrop" id="shareModal" style="display: none;">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Share Live Dashboard for SIH & Friends</h3>
+        <button class="modal-close-btn" id="closeModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>This dashboard is ready to run live on the public web forever for free. Choose any of these 1-minute methods:</p>
+        
+        <div class="deploy-option-card">
+          <div class="deploy-badge">Recommended for SIH</div>
+          <h4>Option 1: GitHub Pages (Permanent & Official)</h4>
+          <p>Push this folder to a GitHub repository and turn on GitHub Pages in repository settings. You will get a permanent URL:</p>
+          <code>https://&lt;your-username&gt;.github.io/water-leak-detection/</code>
+        </div>
+
+        <div class="deploy-option-card">
+          <h4>Option 2: Netlify Drop / Tiiny.host (Instant 30 Seconds)</h4>
+          <p>Drag and drop this <code>water leak</code> folder directly into <strong>app.netlify.com/drop</strong> or <strong>tiiny.host</strong> to get an instant live link you can send right now.</p>
+        </div>
+
+        <div class="deploy-option-card">
+          <h4>Current Local Path:</h4>
+          <code>file:///C:/Users/Sharath/Desktop/water leak/index.html</code>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="modalOkBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>HydroPulse — Smart Water Pipeline Leak Detection & Localization System | Smart India Hackathon (SIH)</p>
+      <p>Indigenous Design · Low Cost · ESP32 + LoRa 865 MHz · Atmanirbhar Bharat</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
