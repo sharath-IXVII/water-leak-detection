@@ -41,7 +41,7 @@ Jal Jeevan introduces four practical engineering innovations:
 
 ### 4. 2-Node Bi-Directional Architecture & Dedicated Power
 * **Bi-Directional 5 km Coverage:** Node 1 (at km 2.5) monitors 2.5 km Left + 2.5 km Right = **5 km**. Node 2 (at km 7.5) monitors 2.5 km Left + 2.5 km Right = **5 km**. The entire 10 km pipeline requires **only 2 field nodes**!
-* **Dedicated Power with UPS Battery Backup:** Each node is powered via a continuous 12V auxiliary line with an internal Li-ion UPS battery buffer, completely eliminating dead-battery risks underground.
+* **Power-Over-Trench with Micro-UPS:** Each node is powered via a continuous 24V DC SELV auxiliary wire laid in the pipe trench from the Gateway's central solar station, backed by an internal 3.65V LiFePO4 micro-UPS buffer (30-day backup), completely eliminating dead-battery risks underground.
 * **Above-Ground Gateway:** The central LoRa receiver gateway (at the headworks pump station or village water tank) is powered by solar / 230V mains.
 
 ---

@@ -32,17 +32,22 @@
         <div class="status-chip chip-online">
           <span class="chip-dot"></span>
           <span class="chip-label">LoRa 865 MHz:</span>
-          <strong id="loraStatusText">Gateway Active (10 km Sector)</strong>
+          <strong id="loraStatusText">Gateway Active (10 km Network)</strong>
         </div>
         <div class="status-chip chip-battery">
           <span class="chip-icon">⚡</span>
           <span class="chip-label">Node Power:</span>
-          <strong id="powerStatusText">Dedicated 12V + UPS Backup</strong>
+          <strong id="powerStatusText">Power-over-Trench (24V DC + UPS)</strong>
         </div>
         <div class="status-chip">
           <span class="chip-icon">📡</span>
           <span class="chip-label">Architecture:</span>
           <strong>2 Nodes (Bi-Directional 5 km)</strong>
+        </div>
+        <div class="status-chip chip-cable">
+          <span class="chip-icon">🧵</span>
+          <span class="chip-label">Active Cable:</span>
+          <strong id="activeCableText">Flat Geotextile Ribbon (&lt; ₹6/m)</strong>
         </div>
       </div>
 
@@ -67,15 +72,16 @@
       <div class="control-title">
         <span class="control-icon">🎮</span>
         <div>
-          <strong>Live Scenario Simulator for Mentors & Technical Evaluators</strong>
-          <span>Test real-world edge cases to verify false-alarm immunity and pinpoint localization</span>
+          <strong>Live 10 km Pipeline Scenario Simulator</strong>
+          <span>Click any scenario below to see how our 2-Node Bi-Directional architecture and multi-hop LoRa relay respond in real time:</span>
         </div>
       </div>
       <div class="simulation-actions">
-        <button class="sim-btn active" id="simNormalBtn">1. Normal (Deep Sleep)</button>
-        <button class="sim-btn btn-danger" id="simRuptureBtn">2. Real Pipe Burst (4.8 km)</button>
-        <button class="sim-btn btn-warning" id="simRainBtn">3. Rain / Groundwater Filter</button>
-        <button class="sim-btn btn-amber" id="simCutBtn">4. Cable Cut Fault (7.2 km)</button>
+        <button class="sim-btn active" id="simNormalBtn">1. Normal (Standby)</button>
+        <button class="sim-btn btn-danger" id="simRuptureBtn">2. Pipe Burst at 6.80 km (Sector 2)</button>
+        <button class="sim-btn btn-orange" id="simMediumBtn">3. Medium Joint Leak at 3.40 km (Sector 1)</button>
+        <button class="sim-btn btn-warning" id="simRainBtn">4. Monsoon Rain Filter (Suppressed)</button>
+        <button class="sim-btn btn-amber" id="simCutBtn">5. Cable Cut / Tamper (8.20 km)</button>
       </div>
     </section>
 
@@ -83,8 +89,8 @@
     <section class="card pipeline-card">
       <div class="card-header">
         <div>
-          <h2 class="card-title">Real-Time Pipeline Spatial Monitor (10 km Sector B-4)</h2>
-          <p class="card-desc">Underground HDPE Pipeline (Ø 200 mm) with TDR Sensing Cable strapped underneath</p>
+          <h2 class="card-title">10 km Municipal Pipeline Network (2-Node Bi-Directional Architecture)</h2>
+          <p class="card-desc">Underground HDPE Trunk Line (Ø 200 mm) with Flat Geotextile Ribbon (6 o'clock invert) + 24V Auxiliary Power Cable</p>
         </div>
         <div class="status-badge-container">
           <span class="system-badge badge-normal" id="mainSystemBadge">ALL SYSTEMS NORMAL</span>
@@ -92,14 +98,46 @@
       </div>
 
       <div class="pipeline-viewport">
-        <!-- Ruler bar -->
+        <!-- Ruler bar with exact 2-Node positions -->
         <div class="distance-ruler">
-          <div class="ruler-tick"><span>0 km</span><small>Node A</small></div>
-          <div class="ruler-tick"><span>2 km</span><small>Pit 1</small></div>
-          <div class="ruler-tick"><span>4 km</span><small>Pit 2</small></div>
-          <div class="ruler-tick"><span>6 km</span><small>Pit 3</small></div>
-          <div class="ruler-tick"><span>8 km</span><small>Pit 4</small></div>
-          <div class="ruler-tick"><span>10 km</span><small>Node B (Gateway)</small></div>
+          <div class="ruler-tick tick-gateway clickable-tick" id="tickGateway0" data-node="G0">
+            <span>0.0 km</span>
+            <small>Headworks (Gateway 0)</small>
+          </div>
+          <div class="ruler-tick tick-node clickable-tick" id="tickNode1" data-node="N1" style="left: 25%;">
+            <span>2.5 km</span>
+            <small>NODE 1 (Pit 1)</small>
+          </div>
+          <div class="ruler-tick tick-midpoint clickable-tick" id="tickMidpoint" data-node="MID" style="left: 50%;">
+            <span>5.0 km</span>
+            <small>Midpoint (Sector Boundary)</small>
+          </div>
+          <div class="ruler-tick tick-node clickable-tick" id="tickNode2" data-node="N2" style="left: 75%;">
+            <span>7.5 km</span>
+            <small>NODE 2 (Pit 2)</small>
+          </div>
+          <div class="ruler-tick tick-tail clickable-tick" id="tickTail" data-node="TAIL" style="left: 100%;">
+            <span>10.0 km</span>
+            <small>Tail End Terminal</small>
+          </div>
+        </div>
+
+        <!-- Bi-Directional Coverage Sector Brackets -->
+        <div class="sector-coverage-bar">
+          <div class="sector-bracket sector-1">
+            <span class="bracket-tag">SECTOR 1: 5.0 km (Covered by Field Node 1)</span>
+            <div class="bracket-sub">
+              <span>← Left Port (0 to 2.5 km)</span>
+              <span>Right Port (2.5 to 5.0 km) →</span>
+            </div>
+          </div>
+          <div class="sector-bracket sector-2">
+            <span class="bracket-tag">SECTOR 2: 5.0 km (Covered by Field Node 2)</span>
+            <div class="bracket-sub">
+              <span>← Left Port (5.0 to 7.5 km)</span>
+              <span>Right Port (7.5 to 10.0 km) →</span>
+            </div>
+          </div>
         </div>
 
         <!-- Pipeline Schematic Track -->
@@ -108,30 +146,53 @@
           <div class="pipe-structure">
             <div class="water-core" id="waterCore"></div>
           </div>
-          <!-- Sensing cable running along bottom -->
-          <div class="sensing-cable-line">
-            <span class="cable-tag">Dielectric Sensing Cable (Strapped to pipe invert)</span>
+
+          <!-- Power-Over-Trench 24V Auxiliary Line -->
+          <div class="power-trench-line">
+            <span class="power-wire-tag">⚡ 24V DC Power-Over-Trench Line (Continuous Power from Gateway Solar)</span>
           </div>
 
-          <!-- Valve Chambers along the 10km line -->
-          <div class="pit-marker" style="left: 0%;" title="Headworks Node A (0 km)"></div>
-          <div class="pit-marker" style="left: 20%;" title="Valve Pit 1 (2.0 km)"></div>
-          <div class="pit-marker" style="left: 40%;" title="Valve Pit 2 (4.0 km)"></div>
-          <div class="pit-marker" style="left: 60%;" title="Valve Pit 3 (6.0 km)"></div>
-          <div class="pit-marker" style="left: 80%;" title="Valve Pit 4 (8.0 km)"></div>
-          <div class="pit-marker" style="left: 100%;" title="Tail Node B (10.0 km)"></div>
+          <!-- Sensing ribbon running along bottom invert (6 o'clock) -->
+          <div class="sensing-cable-line" id="sensingCableVisual">
+            <span class="cable-tag" id="cableVisualTag">Flat Porous Geotextile Ribbon (Strapped to pipe invert at 6 o'clock)</span>
+          </div>
+
+          <!-- Key Node Markers along the 10km line (Clickable to inspect node) -->
+          <div class="node-marker marker-gateway" id="pinGateway0" data-node="G0" style="left: 0%;" title="Click to inspect Gateway Node 0 (km 0.0)">
+            <div class="marker-pin gateway-pin">📡 G0</div>
+          </div>
+          <div class="node-marker marker-field-node" id="pinNode1" data-node="N1" style="left: 25%;" title="Click to inspect Field Node 1 (km 2.5)">
+            <div class="marker-pin node-pin">⚡ N1</div>
+          </div>
+          <div class="node-marker marker-midpoint" id="pinMidpoint" data-node="MID" style="left: 50%;" title="Click to inspect Midpoint Boundary (km 5.0)">
+            <div class="marker-pin mid-pin">📍 5.0k</div>
+          </div>
+          <div class="node-marker marker-field-node" id="pinNode2" data-node="N2" style="left: 75%;" title="Click to inspect Field Node 2 (km 7.5)">
+            <div class="marker-pin node-pin">⚡ N2</div>
+          </div>
+          <div class="node-marker marker-tail" id="pinTail" data-node="TAIL" style="left: 100%;" title="Click to inspect Tail Terminal Pit (km 10.0)">
+            <div class="marker-pin tail-pin">🏁 10k</div>
+          </div>
+
+          <!-- LoRa Multi-Hop Relay Animation Overlay -->
+          <div class="lora-relay-path" id="loraRelayPath">
+            <div class="relay-wave wave-hop2" id="waveHop2" title="Hop 2: Node 2 to Node 1 (LoRa Wireless)"></div>
+            <div class="relay-wave wave-hop1" id="waveHop1" title="Hop 1: Node 1 to Gateway 0 (LoRa Wireless)"></div>
+          </div>
 
           <!-- Pinpoint Marker (Red Dot for burst, Amber for warning, Orange for cable cut) -->
-          <div class="pinpoint-marker" id="pinpointMarker" style="display: none; left: 48%;">
-            <div class="pinpoint-ripple"></div>
+          <div class="pinpoint-marker" id="pinpointMarker" style="display: none; left: 68%;">
+            <div class="pinpoint-ripple" id="pinpointRipple"></div>
             <div class="pinpoint-dot" id="pinpointDot"></div>
             <div class="pinpoint-callout" id="pinpointCallout">
-              <strong id="calloutTitle">PIPE BURST PINPOINTED</strong>
+              <strong id="calloutTitle">PIPE BURST PINPOINTED (RED DOT)</strong>
               <div class="callout-grid">
-                <div><span>Exact Distance:</span> <strong id="calloutDist">4,800 m (4.80 km)</strong></div>
-                <div><span>Chamber Ref:</span> <span id="calloutRef">Pit 2 + 800 m</span></div>
-                <div><span>Round-Trip Time:</span> <span id="calloutTime">48.0 μs</span></div>
-                <div><span>System Confidence:</span> <strong id="calloutConf" style="color: #059669;">98.6%</strong></div>
+                <div><span>Exact Global Mark:</span> <strong id="calloutDist">6,800 m (6.80 km)</strong></div>
+                <div><span>Sector & Node:</span> <span id="calloutRef">Sector 2 (Node 2 Left Port)</span></div>
+                <div><span>Offset from Node:</span> <span id="calloutNodeOffset">700 m West of Node 2</span></div>
+                <div><span>Resonant TDR Freq:</span> <span id="calloutFreq">73.9 kHz</span></div>
+                <div><span>Signal Confidence:</span> <strong id="calloutConf" style="color: #059669;">99.2%</strong></div>
+                <div><span>Telemetry Relay:</span> <span id="calloutRelay" style="color: #2563eb;">Node 2 → Node 1 → Gateway</span></div>
               </div>
             </div>
           </div>
@@ -141,8 +202,9 @@
         <div class="pipeline-meta-footer">
           <div class="legend-group">
             <div class="legend-item"><span class="legend-swatch pipe-swatch"></span> HDPE Pipeline</div>
-            <div class="legend-item"><span class="legend-swatch cable-swatch"></span> Sensing Cable</div>
-            <div class="legend-item"><span class="legend-swatch pit-swatch"></span> Valve Inspection Pit</div>
+            <div class="legend-item"><span class="legend-swatch cable-swatch"></span> Sensing Ribbon</div>
+            <div class="legend-item"><span class="legend-swatch power-swatch"></span> 24V Power Line</div>
+            <div class="legend-item"><span class="legend-swatch node-swatch"></span> Bi-Directional Node (N1 / N2)</div>
             <div class="legend-item"><span class="legend-swatch burst-swatch"></span> Confirmed Leak (Red Dot)</div>
             <div class="legend-item"><span class="legend-swatch rain-swatch"></span> Rain Filtered (No Alarm)</div>
           </div>
@@ -152,22 +214,199 @@
             <span>Flow Velocity: <strong id="flowVelocityVal">1.45 m/s</strong></span>
             <span class="metric-divider">|</span>
             <span>Estimated Loss: <strong id="estimatedLossVal">0 L/hr</strong></span>
+            <span class="metric-divider">|</span>
+            <span>Active Sector: <strong id="activeSectorVal">All Normal</strong></span>
           </div>
+        </div>
+      </div>
+
+      <!-- Selected Node & Chamber Inspector Tray -->
+      <div class="node-inspector-tray" id="nodeInspectorTray">
+        <div class="tray-header">
+          <div class="tray-title-group">
+            <span class="inspector-badge" id="inspBadge">SELECTED PIT HARDWARE</span>
+            <h3 id="inspTitle">Field Node 1 (Pit 1 at km 2.50) — Bi-Directional TDR Unit</h3>
+          </div>
+          <div class="tray-node-nav">
+            <button class="node-tab-btn" data-node="G0" id="btnNodeG0">📡 Gateway 0 (0.0k)</button>
+            <button class="node-tab-btn active" data-node="N1" id="btnNodeN1">⚡ Node 1 (2.5k)</button>
+            <button class="node-tab-btn" data-node="MID" id="btnNodeMid">📍 Midpoint (5.0k)</button>
+            <button class="node-tab-btn" data-node="N2" id="btnNodeN2">⚡ Node 2 (7.5k)</button>
+            <button class="node-tab-btn" data-node="TAIL" id="btnNodeTail">🏁 Tail Pit (10.0k)</button>
+          </div>
+        </div>
+        <div class="tray-body" id="inspBody">
+          <!-- Dynamically populated by app.js -->
         </div>
       </div>
     </section>
 
-    <!-- Two-Column Technical Showcase Grid -->
-    <div class="two-col-grid">
+    <!-- Interactive End-to-End Architecture & Data Flow Chain -->
+    <section class="card architecture-flow-card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">Interactive End-to-End System Architecture & Data Flow</h2>
+          <p class="card-desc">Click any stage below to inspect its exact physics, circuit schematic, component costs, and firmware logic:</p>
+        </div>
+        <div class="pill-badge pill-blue">First-Principles Architecture</div>
+      </div>
 
-      <!-- Left Column: TDR Waveform & ₹50 Ring-Oscillator Calculator -->
-      <section class="card">
+      <div class="flow-chain-container">
+        <div class="flow-block" data-flow="1" id="flowBlock1">
+          <div class="flow-num">1</div>
+          <div class="flow-icon">💧</div>
+          <strong>Invert Drip</strong>
+          <small>Gravity pools water at 6 o'clock</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-block" data-flow="2" id="flowBlock2">
+          <div class="flow-num">2</div>
+          <div class="flow-icon">🧵</div>
+          <strong>Porous Ribbon</strong>
+          <small>Wicking & εᵣ: 2.1 → 80 jump</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-block" data-flow="3" id="flowBlock3">
+          <div class="flow-num">3</div>
+          <div class="flow-icon">🔀</div>
+          <strong>ADG902 Switch</strong>
+          <small>Bi-directional Port A/B</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-block active" data-flow="4" id="flowBlock4">
+          <div class="flow-num">4</div>
+          <div class="flow-icon">🔄</div>
+          <strong>₹50 Ring-Oscillator</strong>
+          <small>74LVC14 delay loop (f = v/4d)</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-block" data-flow="5" id="flowBlock5">
+          <div class="flow-num">5</div>
+          <div class="flow-icon">⏱️</div>
+          <strong>ESP32 PCNT</strong>
+          <small>Hardware pulse counting</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-block" data-flow="6" id="flowBlock6">
+          <div class="flow-num">6</div>
+          <div class="flow-icon">📡</div>
+          <strong>SX1276 LoRa</strong>
+          <small>865 MHz 12-byte payload</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-block" data-flow="7" id="flowBlock7">
+          <div class="flow-num">7</div>
+          <div class="flow-icon">🔂</div>
+          <strong>Multi-Hop Relay</strong>
+          <small>Node 2 → Node 1 → Gateway</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-block" data-flow="8" id="flowBlock8">
+          <div class="flow-num">8</div>
+          <div class="flow-icon">⚡</div>
+          <strong>24V Trench Power</strong>
+          <small>SELV line + micro-UPS buffer</small>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-block" data-flow="9" id="flowBlock9">
+          <div class="flow-num">9</div>
+          <div class="flow-icon">🚨</div>
+          <strong>Cloud & Dispatch</strong>
+          <small>MQTT dashboard & field SMS</small>
+        </div>
+      </div>
+
+      <!-- Flow Detail Drawer -->
+      <div class="flow-detail-drawer" id="flowDetailDrawer">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- Interactive Architecture Deep-Dive Grid -->
+    <div class="interactive-architecture-grid">
+
+      <!-- Column 1: Dual-Cable Interactive Comparator -->
+      <section class="card cable-comparator-card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">TDR Waveform & Ring-Oscillator Localization Engine</h2>
-            <p class="card-desc">Signal propagation speed in cable: <em>v</em> ≈ 0.20 m/ns (2.0 × 10⁸ m/s)</p>
+            <h2 class="card-title">Dual-Cable Technology Showcase (Interactive Comparator)</h2>
+            <p class="card-desc">Compare our Primary Flat Geotextile Ribbon with the Traditional DIY Coaxial Benchmark:</p>
           </div>
-          <div class="pill-badge pill-blue">High-Speed Signal Lab</div>
+          <div class="cable-toggle-group">
+            <button class="toggle-btn active" id="btnSelectRibbon">Flat Geotextile Ribbon (< ₹6/m)</button>
+            <button class="toggle-btn" id="btnSelectCoax">DIY Porous Coaxial (₹28/m)</button>
+          </div>
+        </div>
+
+        <div class="comparator-body">
+          <div class="cable-diagram-box" id="cableDiagramBox">
+            <!-- Dynamic Cable Visual Graphic injected by JS -->
+            <div class="cable-cross-section ribbon-active" id="cableCrossSection">
+              <div class="cable-art ribbon-art">
+                <div class="geotextile-strip">
+                  <div class="cca-wire wire-1" title="CCA Wire 1 (0.6mm)"></div>
+                  <span class="spacing-indicator">8 mm Spacing (High Impedance Z₀ ≈ 180Ω)</span>
+                  <div class="cca-wire wire-2" title="CCA Wire 2 (0.6mm)"></div>
+                </div>
+                <div class="pipe-contact-label">Flat Flush Contact with Pipe Bottom Invert (6 o'clock) — Catches 100% of Drips!</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cable-specs-table-container">
+            <table class="specs-mini-table">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th id="compSelectedHead">Flat Geotextile Ribbon (Primary)</th>
+                  <th id="compOtherHead">DIY Porous Coaxial (Benchmark)</th>
+                </tr>
+              </thead>
+              <tbody id="compTableBody">
+                <tr>
+                  <td><strong>Material Cost per Meter</strong></td>
+                  <td class="highlight-good"><strong>₹5.50 / meter</strong></td>
+                  <td>₹28.00 / meter</td>
+                </tr>
+                <tr>
+                  <td><strong>10 km Cable Total Cost</strong></td>
+                  <td class="highlight-good"><strong>₹55,000 Total</strong></td>
+                  <td>₹2,80,000 Total</td>
+                </tr>
+                <tr>
+                  <td><strong>Pipe Invert Surface Contact</strong></td>
+                  <td class="highlight-good"><strong>Wide Flat Flush (20 mm)</strong></td>
+                  <td>Hairline Tangent (Round cylinder)</td>
+                </tr>
+                <tr>
+                  <td><strong>Drip Capture Speed</strong></td>
+                  <td class="highlight-good"><strong>Instant Capillary Wicking (&lt; 2s)</strong></td>
+                  <td>Requires Puddle Accumulation</td>
+                </tr>
+                <tr>
+                  <td><strong>Impedance Reflection Drop</strong></td>
+                  <td class="highlight-good"><strong>180Ω → 15Ω (85% Dip!)</strong></td>
+                  <td>50Ω → 25Ω (30% Dip)</td>
+                </tr>
+                <tr>
+                  <td><strong>Corrosion Resistance</strong></td>
+                  <td class="highlight-good"><strong>100% Rust-Proof (Polypropylene)</strong></td>
+                  <td>Good (Tinned Copper)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Column 2: TDR Waveform & ₹50 Ring-Oscillator Calculator -->
+      <section class="card tdr-scope-card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">₹50 Ring-Oscillator TDR Waveform & Timing Lab</h2>
+            <p class="card-desc">Signal propagation speed in cable: <em>v</em> ≈ 0.207 m/ns (2.07 × 10⁸ m/s)</p>
+          </div>
+          <div class="pill-badge pill-blue">High-Speed RF Lab</div>
         </div>
 
         <div class="scope-wrapper">
@@ -179,15 +418,15 @@
               <span class="scope-legend-item"><span class="legend-line red"></span> Differential (ΔΓ)</span>
             </div>
           </div>
-          <canvas id="tdrCanvas" width="680" height="230"></canvas>
+          <canvas id="tdrCanvas" width="680" height="210"></canvas>
         </div>
 
-        <!-- Breakthrough Innovation: Ring-Oscillator Calculation Box -->
+        <!-- Ring-Oscillator Feature Box -->
         <div class="innovation-feature-box">
-          <div class="innov-badge">💡 100% BUILDABLE INNOVATION</div>
-          <h4 class="innov-title">The ₹50 Closed-Loop Ring-Oscillator TDR (Replaces ₹30,000 Timing Chips)</h4>
+          <div class="innov-badge">💡 100% BUILDABLE TIMING ENGINE</div>
+          <h4 class="innov-title">The ₹50 Inverter Ring-Oscillator (Replaces ₹30,000 Timing Instruments)</h4>
           <p class="innov-desc">
-            Instead of expensive lab time-to-digital converters, a simple <strong>74LVC14 Schmitt trigger inverter</strong> recirculates the reflected pulse into a closed loop. The cable forms a resonant delay-line oscillator whose frequency is counted directly by the <strong>ESP32 hardware pulse counter (PCNT)</strong>:
+            An ESP32 ADC is 50x too slow to sample picosecond pulses. A single <strong>74LVC14 Schmitt trigger inverter (₹15)</strong> recirculates the reflection into a resonant delay loop. The cable delay becomes an oscillating frequency counted directly by the <strong>ESP32 hardware pulse counter (PCNT) up to 40 MHz</strong>:
           </p>
           <div class="formula-banner">
             <span class="formula"><em>f</em> = <em>v</em> / (4 · <em>d</em>) &nbsp;⟺&nbsp; <em>d</em> = <em>v</em> / (4 · <em>f</em>)</span>
@@ -195,28 +434,53 @@
           <div class="innov-metrics-row">
             <div class="innov-metric">
               <span class="label">Resonant Frequency (<em>f</em>)</span>
-              <strong id="ringFreqVal">20.83 MHz (Dry End)</strong>
+              <strong id="ringFreqVal">20.70 kHz (Dry End)</strong>
             </div>
             <div class="innov-metric">
               <span class="label">One-Way Time Delay (<em>τ</em>)</span>
-              <strong id="ringTauVal">24.0 μs</strong>
+              <strong id="ringTauVal">12.08 μs</strong>
             </div>
             <div class="innov-metric">
-              <span class="label">ESP32 Pinpoint Distance</span>
+              <span class="label">Pinpoint Distance (<em>d</em>)</span>
               <strong id="calcDistanceVal" class="text-accent">-- m</strong>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Right Column: LoRa 865 MHz Telemetry & False Alarm Immunity Logic -->
+    </div>
+
+    <!-- 4-Step Technical Walkthrough ("How Jal Jeevan Works: Step-by-Step") -->
+    <section class="card walkthrough-card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">How Jal Jeevan Works: The 4-Step Technical Walkthrough</h2>
+          <p class="card-desc">Click any step to understand how the physics, RF circuitry, and networking operate together:</p>
+        </div>
+        <div class="walkthrough-tab-nav">
+          <button class="wt-tab-btn active" data-step="1" id="wtTab1">1. Gravity Invert & εᵣ Jump</button>
+          <button class="wt-tab-btn" data-step="2" id="wtTab2">2. ₹50 Ring-Oscillator</button>
+          <button class="wt-tab-btn" data-step="3" id="wtTab3">3. Bi-Directional Coverage</button>
+          <button class="wt-tab-btn" data-step="4" id="wtTab4">4. LoRa Relay & 24V Power</button>
+        </div>
+      </div>
+
+      <div class="walkthrough-content" id="walkthroughContent">
+        <!-- Injected by app.js -->
+      </div>
+    </section>
+
+    <!-- Two-Column Telemetry & Decision Logic Grid -->
+    <div class="two-col-grid">
+
+      <!-- Left Column: LoRa 865 MHz Telemetry & Multi-Hop Relay Inspector -->
       <section class="card">
         <div class="card-header">
           <div>
-            <h2 class="card-title">LoRa 865 MHz Telemetry & Multi-Sensor Fusion</h2>
-            <p class="card-desc">10 km Long-Range Wireless Transmission (SX1276 Node → ESP32 Gateway)</p>
+            <h2 class="card-title">LoRa 865 MHz Telemetry & Multi-Hop Relay Console</h2>
+            <p class="card-desc">License-free 865–867 MHz India Band · Multi-Hop Packet Forwarding to Gateway Node 0</p>
           </div>
-          <div class="pill-badge pill-green" id="loraRfBadge">RSSI: -84 dBm | SNR: +9.2 dB</div>
+          <div class="pill-badge pill-green" id="loraRfBadge">RSSI: -82 dBm | SNR: +9.4 dB</div>
         </div>
 
         <!-- Terminal JSON Output -->
@@ -230,40 +494,68 @@
             <span class="console-title">ESP32_LORA_PAYLOAD (12-Byte Packed Binary & Decoded JSON)</span>
           </div>
           <pre class="console-code" id="telemetryJsonBox">{
-  "node_id": "SEC-B_KM10_NODE1",
+  "network": "JAL_JEEVAN_LORA_865",
+  "gateway_node": "NODE_0_HEADWORKS",
+  "reporting_node": "FIELD_NODE_1",
+  "active_sector": "SECTOR_1_KM0_TO_KM5",
+  "active_port": "STANDBY_BOTH",
   "status": "NORMAL_STANDBY",
-  "power_mode": "DEEP_SLEEP_10UA",
-  "distance_m": 0.0,
+  "power_source": "POWER_OVER_TRENCH_24V",
+  "ups_battery_status": "FLOAT_CHARGED_3.65V",
+  "distance_global_m": 0.0,
   "pressure_bar": 4.20,
-  "cable_impedance_ohm": 100000,
-  "rain_filter_active": true,
-  "battery_v": 3.65,
+  "cable_type": "FLAT_GEOTEXTILE_RIBBON",
   "timestamp": "08:55:00"
 }</pre>
         </div>
 
+        <!-- Power-Over-Trench Architecture Card -->
+        <div class="power-arch-box">
+          <h4 class="power-title">⚡ Power-Over-Trench Architecture (Zero Dead Batteries Underground)</h4>
+          <p class="power-desc">
+            Batteries buried underground eventually die and leave pipelines blind. Jal Jeevan runs an inexpensive <strong>24V DC auxiliary power wire</strong> along the pipe trench from the Gateway's above-ground solar station. Each node has a <strong>rechargeable micro-UPS buffer</strong> ensuring continuous 24/7 monitoring even during municipal grid cuts!
+          </p>
+          <div class="power-badges-row">
+            <span class="p-badge">☀️ 50W Central Solar (Gateway)</span>
+            <span class="p-badge">⚡ 24V SELV Safe Trench Wire</span>
+            <span class="p-badge">🔋 30-Day Internal UPS Backup</span>
+            <span class="p-badge">🛡️ Zero Excavation Maintenance</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: False Alarm Immunity Logic (Rain vs Leak) -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Three-Tier False-Alarm Immunity (Rain vs. Rupture Filter)</h2>
+            <p class="card-desc">Cross-correlating Wetting Length, Speed, and Internal Hydraulic Pressure</p>
+          </div>
+          <div class="pill-badge pill-blue">Multi-Sensor Fusion</div>
+        </div>
+
         <!-- Innovation: Rain vs Rupture Filter -->
         <div class="fusion-card">
-          <h4 class="fusion-title">🛡️ False-Alarm Immunity (Rain Infiltration vs Pipe Burst Filter)</h4>
-          <p class="fusion-desc">
-            The #1 question asked by technical evaluators: <em>"What if monsoon rain wets the soil?"</em>
-            Jal Jeevan cross-correlates external cable moisture with internal hydraulic pressure:
-          </p>
           <div class="fusion-decision-grid">
             <div class="decision-box" id="decBoxBurst">
-              <span class="dec-tag tag-danger">CABLE WET + PRESSURE DROP</span>
-              <strong>CONFIRMED PIPE BURST</strong>
-              <small>Dispatches emergency repair team to exact meter mark</small>
+              <span class="dec-tag tag-danger">CABLE WET + SEVERE PRESSURE DROP</span>
+              <strong>CRITICAL PIPE BURST</strong>
+              <small>High-pressure rupture floods 5+ meters. Dispatches emergency repair crew immediately.</small>
+            </div>
+            <div class="decision-box" id="decBoxMedium">
+              <span class="dec-tag tag-orange">CABLE WET + MODERATE PRESSURE DROP</span>
+              <strong>MEDIUM JOINT LEAK</strong>
+              <small>Joint leak spreads 1–2 meters. Line pressure drops 0.3–0.8 Bar. High-priority dispatch.</small>
             </div>
             <div class="decision-box" id="decBoxRain">
-              <span class="dec-tag tag-warning">CABLE WET + NORMAL PRESSURE</span>
-              <strong>RAIN INFILTRATION</strong>
-              <small>Groundwater saturation detected; false alarm suppressed!</small>
+              <span class="dec-tag tag-warning">DIFFUSE WETTING + PRESSURE STABLE</span>
+              <strong>MONSOON RAIN INFILTRATION</strong>
+              <small>Groundwater saturation across &gt; 500m. Pipe pressure rock steady. False alarm suppressed!</small>
             </div>
             <div class="decision-box" id="decBoxCut">
-              <span class="dec-tag tag-amber">END-OF-LINE OPEN CIRCUIT</span>
-              <strong>CABLE TAMPER / CUT</strong>
-              <small>Physical line severed; pinpointed using reflection</small>
+              <span class="dec-tag tag-amber">END-OF-LINE OPEN CIRCUIT (Γ = +1)</span>
+              <strong>CABLE TAMPER / SEVERED FAULT</strong>
+              <small>Physical line break located using positive reflection edge. Dispatches maintenance crew.</small>
             </div>
           </div>
         </div>
@@ -272,7 +564,7 @@
         <div class="specs-grid">
           <div class="spec-tile">
             <span class="spec-label">Power Architecture</span>
-            <strong>Dedicated 12V + UPS Buffer</strong>
+            <strong>Power-Over-Trench + UPS</strong>
           </div>
           <div class="spec-tile">
             <span class="spec-label">Anti-Electrolysis Check</span>
@@ -283,13 +575,113 @@
             <strong>865.2 MHz (India Band)</strong>
           </div>
           <div class="spec-tile">
-            <span class="spec-label">Cable Cost per Meter</span>
-            <strong style="color: #2563eb;">₹5.50 / meter</strong>
+            <span class="spec-label">Nodes for 10 km</span>
+            <strong style="color: #2563eb;">Only 2 Field Nodes</strong>
           </div>
         </div>
       </section>
 
     </div>
+
+    <!-- Interactive Scalability & BOM Calculator -->
+    <section class="card bom-calculator-card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">Interactive Municipal Scalability & BOM Cost Calculator</h2>
+          <p class="card-desc">Slide to adjust pipeline distance and see real-time node counts, hardware bill-of-materials, and competitor savings:</p>
+        </div>
+        <div class="pill-badge pill-green" id="bomPerMeterBadge">₹7.02 / meter All-Inclusive</div>
+      </div>
+
+      <div class="bom-grid">
+        <div class="bom-slider-column">
+          <div class="slider-group">
+            <div class="slider-label-row">
+              <label for="pipelineDistSlider"><strong>Pipeline Network Length:</strong></label>
+              <span class="slider-val" id="sliderDistVal">10.0 km</span>
+            </div>
+            <input type="range" id="pipelineDistSlider" min="1" max="25" value="10" step="1" class="custom-slider">
+            <div class="slider-ticks">
+              <span>1 km</span>
+              <span>5 km</span>
+              <span>10 km (Base)</span>
+              <span>15 km</span>
+              <span>20 km</span>
+              <span>25 km</span>
+            </div>
+          </div>
+
+          <div class="bom-quick-stats">
+            <div class="b-stat">
+              <span class="b-label">Field Nodes (5 km / node)</span>
+              <strong id="calcNodeCount">2 Field Nodes</strong>
+            </div>
+            <div class="b-stat">
+              <span class="b-label">Central Solar Gateway</span>
+              <strong id="calcGatewayCount">1 Gateway Station</strong>
+            </div>
+            <div class="b-stat">
+              <span class="b-label">Total Sensing Ribbon</span>
+              <strong id="calcRibbonLen">10,000 meters</strong>
+            </div>
+            <div class="b-stat">
+              <span class="b-label">Total System Capital Cost</span>
+              <strong id="calcTotalCost" class="text-accent" style="color: #1d4ed8; font-size: 1.25rem;">₹70,200</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="bom-table-column">
+          <table class="specs-mini-table">
+            <thead>
+              <tr>
+                <th>Component / Subsystem</th>
+                <th>Qty</th>
+                <th>Unit Cost</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody id="bomTableBody">
+              <!-- Rendered dynamically -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bom-comparison-column">
+          <h4 style="font-size: 0.85rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.5rem;">Cost vs. Conventional Alternatives</h4>
+          <div class="comparison-bar-group">
+            <div class="comp-bar-item">
+              <div class="cbar-labels">
+                <span>Imported TDR Cable (TraceTek)</span>
+                <strong id="cbarTraceTekVal">₹5,00,00,000</strong>
+              </div>
+              <div class="cbar-track"><div class="cbar-fill fill-red" style="width: 100%;"></div></div>
+            </div>
+            <div class="comp-bar-item">
+              <div class="cbar-labels">
+                <span>DMA Flow Meters & Valves</span>
+                <strong id="cbarDmaVal">₹15,00,000</strong>
+              </div>
+              <div class="cbar-track"><div class="cbar-fill fill-amber" style="width: 35%;"></div></div>
+            </div>
+            <div class="comp-bar-item highlight-item">
+              <div class="cbar-labels">
+                <strong>Jal Jeevan (Complete System)</strong>
+                <strong style="color: #059669;" id="cbarJalJeevanVal">₹70,200</strong>
+              </div>
+              <div class="cbar-track"><div class="cbar-fill fill-green" id="cbarFillJalJeevan" style="width: 4.7%;"></div></div>
+            </div>
+          </div>
+          <div class="savings-alert-box">
+            <span class="s-icon">💰</span>
+            <div>
+              <strong id="savingsPctText">95.3% Municipal Budget Savings!</strong>
+              <p id="savingsDescText">Provides exact meter-level leak pinpointing (±1 m) at a fraction of zone-level flow meter costs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- Alert History & Automated Dispatch Table -->
     <section class="card log-card">
@@ -316,47 +708,47 @@
           <tbody id="logTableBody">
             <tr>
               <td>08:52:10</td>
-              <td>SEC-B_KM10</td>
+              <td>SECTOR 1 (NODE 1)</td>
               <td><span class="badge-status badge-ok">Heartbeat Normal</span></td>
               <td>--</td>
-              <td>Pressure 4.20 Bar, Cable Dry (100kΩ)</td>
-              <td>Node healthy, 10 km LoRa link verified</td>
+              <td>Pressure 4.20 Bar, Cable Dry (180Ω)</td>
+              <td>Node healthy, Power-over-Trench 24V verified</td>
             </tr>
             <tr>
               <td>08:45:00</td>
-              <td>SEC-B_KM10</td>
+              <td>SECTOR 2 (NODE 2)</td>
               <td><span class="badge-status badge-ok">Baseline Sync</span></td>
               <td>--</td>
-              <td>Reference trace stored for 10 km sector</td>
-              <td>Zero-drift auto calibration completed</td>
+              <td>Reference trace stored for 5 km sector</td>
+              <td>LoRa relay link verified (Node 2 → Node 1 → G0)</td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <!-- Project Presentation & Technical Defense Summary -->
+    <!-- Comprehensive Municipal ROI & Competitor Defense Sheet -->
     <section class="card mentor-card">
       <div class="mentor-header">
-        <div class="mentor-badge">🏆 TECHNICAL EVALUATION & MENTOR REVIEW SHEET</div>
-        <h3>Why Jal Jeevan Outperforms Conventional Tech</h3>
+        <div class="mentor-badge">🏆 MUNICIPAL EVALUATION & COMPETITOR DEFENSE SHEET</div>
+        <h3>Why Jal Jeevan Outperforms All 5 Conventional Alternatives</h3>
       </div>
       <div class="mentor-grid">
         <div class="mentor-col">
           <h4>1. 100% Pipe Material Agnostic</h4>
-          <p>Acoustic leak loggers fail on HDPE/PVC plastic pipes because plastic dampens sound waves. Jal Jeevan senses external water contact directly, working on <strong>100% of pipeline materials</strong>.</p>
+          <p>Acoustic leak loggers fail on HDPE/PVC plastic pipes because plastic dampens sound waves. Jal Jeevan senses water directly, working on <strong>100% of pipeline materials</strong>.</p>
         </div>
         <div class="mentor-col">
-          <h4>2. Meter Pinpoint vs Zone Guess</h4>
-          <p>Flow meters only tell you a 10 km zone is losing water. Jal Jeevan pinpoints the leak down to the <strong>exact meter mark</strong>, saving digging miles of rural roads.</p>
+          <h4>2. Exact Meter Pinpoint vs Zone Guess</h4>
+          <p>Flow meters only tell you a 10 km zone is losing water. Jal Jeevan pinpoints the leak down to the <strong>exact meter mark (±1 m)</strong>, saving digging miles of roads.</p>
         </div>
         <div class="mentor-col">
-          <h4>3. 99% Cost Reduction</h4>
-          <p>Commercial TDR cables (TraceTek/TTK) are imported and cost ₹5,000–₹10,000/meter. Jal Jeevan uses a flat geotextile twin-lead ribbon manufactured for <strong>under ₹6/meter</strong> (₹58,000 per 10 km).</p>
+          <h4>3. 98.6% Cost Reduction</h4>
+          <p>Commercial TDR cables (TraceTek/TTK) are imported and cost ₹5,000–₹10,000/meter. Jal Jeevan's complete 10 km system costs <strong>₹70,200 total (~₹7.02/m all-inclusive)</strong>.</p>
         </div>
         <div class="mentor-col">
-          <h4>4. ₹50 Ring-Oscillator Timing</h4>
-          <p>Eliminates the need for expensive picosecond time-to-digital converter chips by turning the cable into a resonant frequency oscillator measured by the <strong>ESP32 pulse counter</strong>.</p>
+          <h4>4. 2 Nodes Instead of 20 Nodes</h4>
+          <p>Bi-directional TDR multiplexing (2.5 km Left + 2.5 km Right = 5 km per node) monitors the entire 10 km pipeline with <strong>just 2 field nodes and 1 gateway</strong>.</p>
         </div>
       </div>
     </section>
@@ -371,23 +763,20 @@
         <button class="modal-close-btn" id="closeModalBtn">&times;</button>
       </div>
       <div class="modal-body">
-        <p>This dashboard is ready to run live on the public web forever for free. Choose any of these 1-minute methods:</p>
+        <p>This dashboard is running live on GitHub Pages. Share this link for evaluation:</p>
         
         <div class="deploy-option-card">
-          <div class="deploy-badge">Recommended</div>
-          <h4>Option 1: GitHub Pages (Permanent & Official)</h4>
-          <p>Push this folder to a GitHub repository and turn on GitHub Pages in repository settings. You will get a permanent URL:</p>
-          <code>https://&lt;your-username&gt;.github.io/water-leak-detection/</code>
+          <div class="deploy-badge">Official Live Link</div>
+          <h4>GitHub Pages URL</h4>
+          <code>https://sharath-ixvii.github.io/water-leak-detection/</code>
         </div>
 
         <div class="deploy-option-card">
-          <h4>Option 2: Netlify Drop / Tiiny.host (Instant 30 Seconds)</h4>
-          <p>Drag and drop this <code>water leak</code> folder directly into <strong>app.netlify.com/drop</strong> or <strong>tiiny.host</strong> to get an instant live link you can send right now.</p>
-        </div>
-
-        <div class="deploy-option-card">
-          <h4>Current Local Path:</h4>
-          <code>file:///C:/Users/Sharath/Desktop/water leak/index.html</code>
+          <h4>Architecture Summary:</h4>
+          <p>• <strong>2-Node Bi-Directional:</strong> 5 km per node covering 10 km trunk line.<br>
+          • <strong>Dual-Cable:</strong> Flat Geotextile Ribbon (&lt; ₹6/m) & DIY Coaxial (₹28/m).<br>
+          • <strong>Power-over-Trench:</strong> Continuous 24V DC auxiliary line + UPS battery buffer.<br>
+          • <strong>Total 10 km Cost:</strong> ₹70,200 (Under ₹7.02 / meter all-inclusive).</p>
         </div>
       </div>
       <div class="modal-footer">
@@ -399,7 +788,7 @@
   <footer class="app-footer">
     <div class="footer-container">
       <p>Jal Jeevan — Smart Water Pipeline Leak Detection & Localization System</p>
-      <p>Low-Cost Sensing Cable · ESP32 + LoRa 865 MHz · Real-Time Localization</p>
+      <p>Porous Sensing Line · ESP32 + LoRa 865 MHz · 2-Node Bi-Directional Architecture · Power-over-Trench</p>
     </div>
   </footer>
 
