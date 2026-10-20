@@ -24,11 +24,9 @@ In water distribution systems, non-revenue water losses range from **35% to 50%*
 
 Jal Jeevan introduces four practical engineering innovations:
 
-### 1. Flat Porous Geotextile Twin-Lead Cable (< ₹6/meter)
-* **Conductors:** Dual parallel 0.6 mm Copper-Clad Aluminum (CCA) wires (optimized for the RF Skin Effect at 20–40 MHz, giving identical high-frequency wave propagation at 1/3 the copper cost).
-* **Carrier & Dielectric:** Needle-punched non-woven polypropylene geotextile ribbon (rot-proof, high tensile strength, rapid capillary wicking).
-* **Geometry:** Flat 20 mm wide ribbon strapped to the pipe invert (6 o'clock position), maximizing water drip contact area compared to round coaxial cables.
-* **Physics:** Water has a relative permittivity of $\varepsilon_r \approx 80$ vs dry $\varepsilon_r \approx 1.8$. Water wicking collapses characteristic impedance from $Z_0 \approx 180\ \Omega$ down to $\approx 15\ \Omega$, creating an intense negative reflection coefficient ($\Gamma \approx -0.85$).
+### 1. Dual-Cable Sensing Options (Ribbon & Coaxial)
+* **Primary (Flat Geotextile Ribbon - < ₹6/meter):** Dual parallel 0.6 mm Copper-Clad Aluminum (CCA) wires on a 20 mm wide non-woven polypropylene ribbon. Sits flat under the pipe invert (6 o'clock position), wicks drips immediately, and triggers an 85% impedance reflection dip.
+* **Secondary (DIY Porous Coaxial - ₹28/meter):** Inner copper core + porous cellulose dielectric + braided/slotted copper return shield. Serves as a traditional shielded RF benchmark.
 
 ### 2. The ₹50 "Ring-Oscillator" TDR (Replaces ₹30,000 Timing Chips)
 * Instead of costly picosecond time-to-digital converters or lab oscilloscopes, a single **74LVC14 Schmitt trigger inverter IC (₹15)** recirculates the reflected pulse into a resonant delay loop:
@@ -41,10 +39,10 @@ Jal Jeevan introduces four practical engineering innovations:
   * **Cable Wet + Internal Pressure Drop** $\implies$ **CONFIRMED PIPE BURST** (Red Dot triggered, emergency dispatch sent).
   * **Cable Wet + Internal Pressure Normal** $\implies$ **RAIN / GROUNDWATER INFILTRATION** (False alarm automatically suppressed!).
 
-### 4. Underground Battery Architecture & Deep Sleep (3.5+ Years Autonomy)
-* **Underground Node (Zero Solar Dependency):** Because pipeline monitoring nodes reside underground along the pipe trench or in sub-surface pits, solar cannot be used. The node is powered by a long-life 3.6V LiSOCl₂ (Lithium Thionyl Chloride) high-energy cell.
-* **99.9% Deep Sleep:** ESP32 stays in ultra-low-power Deep Sleep ($< 10\ \mu\text{A}$), waking for just 1.2 ms every 10 seconds for a pulsed polarity check (eliminating electrolysis). Active TDR and LoRa fire only upon event detection, yielding **3.5+ years of autonomous life**.
-* **Above-Ground Gateway:** The central LoRa receiver gateway (located at the headworks, pump station, or overhead water tank) is powered by solar / 230V mains.
+### 4. 2-Node Bi-Directional Architecture & Dedicated Power
+* **Bi-Directional 5 km Coverage:** Node 1 (at km 2.5) monitors 2.5 km Left + 2.5 km Right = **5 km**. Node 2 (at km 7.5) monitors 2.5 km Left + 2.5 km Right = **5 km**. The entire 10 km pipeline requires **only 2 field nodes**!
+* **Dedicated Power with UPS Battery Backup:** Each node is powered via a continuous 12V auxiliary line with an internal Li-ion UPS battery buffer, completely eliminating dead-battery risks underground.
+* **Above-Ground Gateway:** The central LoRa receiver gateway (at the headworks pump station or village water tank) is powered by solar / 230V mains.
 
 ---
 
