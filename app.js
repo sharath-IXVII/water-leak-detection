@@ -1,4 +1,4 @@
-// HydroPulse - Professional Light Theme Dashboard Logic (SIH 2024-2025)
+// HydroPulse - Smart Water Pipeline Leak Detection Dashboard Logic
 
 document.addEventListener('DOMContentLoaded', () => {
   // Scenario Buttons

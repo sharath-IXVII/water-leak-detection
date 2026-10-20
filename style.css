@@ -1,6 +1,6 @@
 /* =========================================================
    HydroPulse - Professional Light Theme CSS
-   Engineered for Smart India Hackathon (SIH) & Jal Jeevan Mission
+   Engineered for Indigenous Water Pipeline Infrastructure
    ========================================================= */
 
 :root {
@@ -118,7 +118,7 @@ body {
   color: var(--text-main);
 }
 
-.badge-sih {
+.badge-tag {
   font-size: 0.68rem;
   font-weight: 700;
   background: #f97316;

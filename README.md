@@ -1,6 +1,6 @@
 # 💧 HydroPulse — Smart Water Pipeline Leak Detection & Localization
 
-[![SIH 2024-2025](https://img.shields.io/badge/Smart%20India%20Hackathon-SIH%202024--2025-orange.svg)](https://sih.gov.in)
+[![Innovation](https://img.shields.io/badge/Innovation-Indigenous%20Tech-orange.svg)](#the-hydropulse-breakthrough)
 [![Jal Jeevan Mission](https://img.shields.io/badge/National%20Mission-Jal%20Jeevan%20Mission-blue.svg)](https://jaljeevanmission.gov.in)
 [![Hardware](https://img.shields.io/badge/Hardware-ESP32%20%7C%20LoRa%20865MHz%20%7C%20TDR-green.svg)](#hardware-architecture)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -11,7 +11,7 @@ An indigenous, ultra-low-cost, high-efficiency water pipeline leak detection and
 
 ---
 
-## 📌 Problem Statement (SIH)
+## 📌 Problem Statement
 
 In India, **Non-Revenue Water (NRW)** losses range from **35% to 50%** in rural water supply schemes (*Jal Jeevan Mission*). Undetected underground leaks run for weeks before surfacing, wasting treated drinking water, causing ground subsidence, and allowing soil pathogens to enter distribution mains.
 
@@ -85,5 +85,5 @@ The dashboard features:
 ## 👨‍💻 Author & Team
 
 * **Lead:** [Sharath (sharath-IXVII)](https://github.com/sharath-IXVII)
-* **Initiative:** Smart India Hackathon (SIH 2024–2025)
-* **Theme:** Smart Water Management / Jal Jeevan Mission
+* **Domain:** Smart Water Infrastructure / Jal Jeevan Mission
+* **Architecture:** Indigenous TDR Dielectric Sensing + ESP32 LoRa 865 MHz
