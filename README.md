@@ -1,32 +1,30 @@
-# 💧 HydroPulse — Smart Water Pipeline Leak Detection & Localization
+# 💧 Jal Jeevan — Smart Water Pipeline Leak Detection & Localization
 
-[![Innovation](https://img.shields.io/badge/Innovation-Indigenous%20Tech-orange.svg)](#the-hydropulse-breakthrough)
-[![Jal Jeevan Mission](https://img.shields.io/badge/National%20Mission-Jal%20Jeevan%20Mission-blue.svg)](https://jaljeevanmission.gov.in)
 [![Hardware](https://img.shields.io/badge/Hardware-ESP32%20%7C%20LoRa%20865MHz%20%7C%20TDR-green.svg)](#hardware-architecture)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 > **Live Interactive Dashboard:** [https://sharath-ixvii.github.io/water-leak-detection/](https://sharath-ixvii.github.io/water-leak-detection/)
 
-An indigenous, ultra-low-cost, high-efficiency water pipeline leak detection and localization system designed for rural and urban distribution pipelines in India. Combines an **indigenous dielectric sensing cable**, **Time-Domain Reflectometry (TDR)**, **ESP32**, and **LoRa 865 MHz** long-range telemetry.
+A low-cost, high-efficiency water pipeline leak detection and localization system designed for distribution pipelines. Combines a **dielectric sensing cable**, **Time-Domain Reflectometry (TDR)**, **ESP32**, and **LoRa 865 MHz** long-range telemetry.
 
 ---
 
 ## 📌 Problem Statement
 
-In India, **Non-Revenue Water (NRW)** losses range from **35% to 50%** in rural water supply schemes (*Jal Jeevan Mission*). Undetected underground leaks run for weeks before surfacing, wasting treated drinking water, causing ground subsidence, and allowing soil pathogens to enter distribution mains.
+In water distribution systems, non-revenue water losses range from **35% to 50%**. Undetected underground leaks run for weeks before surfacing, wasting treated drinking water, causing ground subsidence, and allowing contaminants to enter distribution mains.
 
 ### Why Conventional Solutions Fail:
-1. **Flowmeters (Inlet − Outlet):** Only calculate total volume loss in a zone; **cannot pinpoint where** the leak is located along a 10 km line.
-2. **Acoustic Leak Loggers:** Completely fail on plastic (**HDPE/PVC**) pipes because plastic dampens acoustic sound waves. Over 90% of rural JJM pipelines are HDPE/PVC!
-3. **Commercial Sensing Cables:** Imported systems (e.g., TraceTek) cost **₹5,000 to ₹10,000 per meter** with proprietary closed locators, making widespread rural adoption impossible.
+1. **Flowmeters (Inlet − Outlet):** Only calculate total volume loss in a zone; **cannot pinpoint where** the leak is located along a pipeline.
+2. **Acoustic Leak Loggers:** Fail on plastic (**HDPE/PVC**) pipes because plastic dampens acoustic sound waves.
+3. **Commercial Sensing Cables:** Imported systems cost **₹5,000 to ₹10,000 per meter** with proprietary closed locators, making widespread deployment unfeasible.
 
 ---
 
-## 🚀 The HydroPulse Breakthrough
+## 🚀 Key Innovations
 
-HydroPulse introduces four guaranteed buildable innovations:
+Jal Jeevan introduces four practical engineering innovations:
 
-### 1. Indigenous Porous Composite Sensing Cable (< ₹28/meter)
+### 1. Porous Composite Sensing Cable (< ₹28/meter)
 * Core: 0.8 mm tinned solid copper wire.
 * Dielectric: Loose spiral hydrophilic wicking material (dry permittivity $\varepsilon_r \approx 1.8$).
 * Shield: Braided copper return conductor.
@@ -39,7 +37,7 @@ HydroPulse introduces four guaranteed buildable innovations:
 * The **ESP32 built-in hardware Pulse Counter (PCNT)** measures the oscillating frequency directly up to 40 MHz with zero CPU overhead, pinpointing distance to the exact meter!
 
 ### 3. "Rain Infiltration vs. Pipe Burst" Multi-Sensor Fusion
-* **The Jury Question:** *"What if monsoon rain wets the soil?"*
+* **The Challenge:** Handling ground moisture from environmental rain.
 * **The Solution:** Dual-sensor cross-correlation:
   * **Cable Wet + Internal Pressure Drop** $\implies$ **CONFIRMED PIPE BURST** (Red Dot triggered, emergency dispatch sent).
   * **Cable Wet + Internal Pressure Normal** $\implies$ **RAIN / GROUNDWATER INFILTRATION** (False alarm automatically suppressed!).
@@ -47,13 +45,13 @@ HydroPulse introduces four guaranteed buildable innovations:
 ### 4. Dual-Mode Sleep-Wake Power (2.8 Years Battery Life)
 * **99.9% of the time:** ESP32 remains in ultra-low-power Deep Sleep ($< 10\ \mu\text{A}$).
 * Once every 10 seconds, it wakes for 1 millisecond to run a **polarity-reversing microsecond pulse check** (eliminating galvanic copper electrolysis).
-* Active TDR and LoRa transmission trigger **only upon event detection**, powered by a single 18650 cell + ₹150 solar panel.
+* Active TDR and LoRa transmission trigger **only upon event detection**, powered by a single 18650 cell + solar panel.
 
 ---
 
 ## 📡 LoRa 865 MHz Telemetry (10 km Sector Range)
 
-Field nodes monitor pipeline sectors and transmit an ultra-dense **12-byte binary payload** over the license-free 865–867 MHz India band:
+Field nodes monitor pipeline sectors and transmit an ultra-dense **12-byte binary payload** over the 865–867 MHz band:
 
 ```
 [2 Bytes: NodeID] [1 Byte: StatusCode] [2 Bytes: Distance_m] 
@@ -70,14 +68,14 @@ The dashboard features:
 * **Interactive 10 km Pipeline Spatial Track** with simulated water flow, valve inspection pits, and the **Red Dot** pinpoint marker.
 * **Light-Theme Digital Oscilloscope** displaying dry baseline, live trace, and differential reflection dip ($\Delta\Gamma$).
 * **Real-Time LoRa JSON Packet Terminal** with live RSSI, SNR, and pressure metrics.
-* **Automated Maintenance Dispatch** simulating instant SMS/Telegram alerts to local *Jal Board* engineers.
+* **Automated Maintenance Dispatch** simulating instant alerts to field technicians.
 
 ---
 
 ## 🛠️ Repository Files
 
 * [`index.html`](index.html) — Professional Light-Theme Dashboard UI.
-* [`style.css`](style.css) — Clean government/enterprise CSS stylesheet.
+* [`style.css`](style.css) — Clean CSS stylesheet.
 * [`app.js`](app.js) — Real-time waveform simulator, Ring-Oscillator frequency engine, and event handler.
 
 ---
@@ -85,5 +83,5 @@ The dashboard features:
 ## 👨‍💻 Author & Team
 
 * **Lead:** [Sharath (sharath-IXVII)](https://github.com/sharath-IXVII)
-* **Domain:** Smart Water Infrastructure / Jal Jeevan Mission
-* **Architecture:** Indigenous TDR Dielectric Sensing + ESP32 LoRa 865 MHz
+* **Domain:** Smart Water Infrastructure
+* **Architecture:** TDR Dielectric Sensing + ESP32 LoRa 865 MHz

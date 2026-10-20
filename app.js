@@ -1,4 +1,4 @@
-// HydroPulse - Smart Water Pipeline Leak Detection Dashboard Logic
+// Jal Jeevan - Smart Water Pipeline Leak Detection Dashboard Logic
 
 document.addEventListener('DOMContentLoaded', () => {
   // Scenario Buttons
