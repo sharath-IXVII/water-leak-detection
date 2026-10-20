@@ -24,12 +24,11 @@ In water distribution systems, non-revenue water losses range from **35% to 50%*
 
 Jal Jeevan introduces four practical engineering innovations:
 
-### 1. Porous Composite Sensing Cable (< ₹28/meter)
-* Core: 0.8 mm tinned solid copper wire.
-* Dielectric: Loose spiral hydrophilic wicking material (dry permittivity $\varepsilon_r \approx 1.8$).
-* Shield: Braided copper return conductor.
-* Outer Jacket: Porous expandable PET mesh.
-* **Physics:** Water has a relative permittivity of $\varepsilon_r \approx 80$. When water wicks into the cable, characteristic impedance $Z_0 = \sqrt{L/C}$ drops sharply, generating a negative reflection coefficient ($\Gamma < 0$).
+### 1. Flat Porous Geotextile Twin-Lead Cable (< ₹6/meter)
+* **Conductors:** Dual parallel 0.6 mm Copper-Clad Aluminum (CCA) wires (optimized for the RF Skin Effect at 20–40 MHz, giving identical high-frequency wave propagation at 1/3 the copper cost).
+* **Carrier & Dielectric:** Needle-punched non-woven polypropylene geotextile ribbon (rot-proof, high tensile strength, rapid capillary wicking).
+* **Geometry:** Flat 20 mm wide ribbon strapped to the pipe invert (6 o'clock position), maximizing water drip contact area compared to round coaxial cables.
+* **Physics:** Water has a relative permittivity of $\varepsilon_r \approx 80$ vs dry $\varepsilon_r \approx 1.8$. Water wicking collapses characteristic impedance from $Z_0 \approx 180\ \Omega$ down to $\approx 15\ \Omega$, creating an intense negative reflection coefficient ($\Gamma \approx -0.85$).
 
 ### 2. The ₹50 "Ring-Oscillator" TDR (Replaces ₹30,000 Timing Chips)
 * Instead of costly picosecond time-to-digital converters or lab oscilloscopes, a single **74LVC14 Schmitt trigger inverter IC (₹15)** recirculates the reflected pulse into a resonant delay loop:
